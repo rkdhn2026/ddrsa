@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Registration · DDRSA</title>
+<meta name="description" content="DDRSA, the Dhanbad District Roller Skating Association: skater registration, championships, results, coaches, referees and news.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;1,700;1,800&family=JetBrains+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="img/ddrsa-logo-32.png">
+</head>
+<body>
+<div class="topbar">
+  <div class="wrap">
+    <span><span class="ph">info@ddrsa.org</span> · <span class="ph">+91 00000 00000</span></span>
+    <span class="links">
+      <a href="https://www.facebook.com/profile.php?id=61550527074997" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://www.facebook.com/profile.php?id=61550527074997" target="_blank" rel="noopener">YouTube</a>
+      <a href="contact.html#disclaimer">Disclaimer</a>
+      <a class="login" href="registration.html#portal">Skater login</a>
+    </span>
+  </div>
+</div>
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img class="brand-mark" src="img/ddrsa-logo-192.png" alt="DDRSA logo" width="56" height="56">
+      <span class="brand-name">DDRSA<span class="brand-sub">Dhanbad District Roller Skating Association</span></span>
+    </a>
+    <nav aria-label="Main">
+      <ul class="nav">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="championships.html">Championships</a></li>
+      <li><a href="officials.html">Coaches &amp; Referees</a></li>
+      <li><a href="news.html">News &amp; Gallery</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li class="cta"><a href="registration.html" aria-current="page">Register 2026-27</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<main>
+<div class="wrap">
+  <section class="page-head">
+    <p class="eyebrow">Annual registration 2026-27</p>
+    <h1>Skater registration</h1>
+    <p class="lede">Registration is mandatory for every skater in club, district, state and national events. It is valid from 1 April 2026 to 31 March 2027.</p>
+    <nav class="subnav" aria-label="On this page"><a href="#steps">How it works</a><a href="#form">Register</a><a href="#portal">Skater login</a></nav>
+  </section>
+  <div class="lanes" aria-hidden="true"></div>
+
+  <section class="section split" id="steps">
+    <div class="stack">
+      <h2>How it works</h2>
+      <ul class="checks">
+        <li>Fill in the form below. Your race category is worked out from your date of birth.</li>
+        <li>Pay the registration fee of <span class="ph">₹ amount</span> at your club or online.</li>
+        <li>Your club verifies your birth certificate and photo.</li>
+        <li>You get a DDRSA skater ID to use for every event entry.</li>
+      </ul>
+    </div>
+    <div class="stack">
+      <h2>Documents needed</h2>
+      <ul class="checks">
+        <li>Birth certificate (government-issued)</li>
+        <li>Recent passport-size photo</li>
+        <li>Aadhaar or school ID of the skater</li>
+        <li>Parent's consent for skaters under 18</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="form">
+    <h2>Registration form</h2>
+    <form id="reg-form" novalidate>
+      <div class="form-grid">
+        <div class="field"><label for="r-name">Skater's full name</label><input id="r-name" required autocomplete="name"></div>
+        <div class="field"><label for="r-dob">Date of birth</label><input id="r-dob" type="date" required></div>
+        <div class="field"><label for="r-gender">Gender</label><select id="r-gender"><option>Girl</option><option>Boy</option></select></div>
+        <div class="field"><label for="r-skate">Skate type</label><select id="r-skate"><option>Beginner</option><option>Quad</option><option selected>Inline</option></select></div>
+        <div class="field"><label for="r-club">Club</label><select id="r-club"><option>Club name (to fill in)</option><option>Independent</option></select></div>
+        <div class="field"><label for="r-parent">Parent / guardian</label><input id="r-parent"></div>
+        <div class="field"><label for="r-phone">Mobile number</label><input id="r-phone" inputmode="tel" required></div>
+        <div class="field"><label for="r-email">Email</label><input id="r-email" type="email"></div>
+      </div>
+      <div class="result-box" aria-live="polite">
+        <span class="eyebrow">Race category for 2026-27</span>
+        <strong id="r-cat">Enter a date of birth</strong>
+        <span class="form-note" id="r-cat-note">Age counted as on 1 January 2027. Check the bands against the federation's current rules.</span>
+      </div>
+      <button class="btn btn-primary" type="submit">Submit registration</button>
+      <p class="form-note">This form is a front-end only. It needs a database or form service before it can accept real registrations.</p>
+      <p id="r-status" class="notice" role="status" hidden></p>
+    </form>
+  </section>
+
+  <section class="section" id="portal">
+    <div class="reg-banner">
+      <div class="stack">
+        <h2>Skater login</h2>
+        <p>Registered skaters will be able to sign in to download ID cards, enter events and see their results. The login portal needs a backend and is not built yet.</p>
+      </div>
+      <a class="btn btn-ghost" href="contact.html">Ask the office</a>
+    </div>
+  </section>
+</div>
+</main>
+<script>
+(function () {
+  // Age bands: [max age, label]. Edit to match the federation's rules.
+  var BANDS = [[5, "Under 6"], [7, "6–8 years"], [9, "8–10 years"], [11, "10–12 years"], [13, "12–14 years"], [15, "14–16 years"], [29, "Above 16 (Senior)"], [200, "Masters 30+"]];
+  var REF = new Date(2027, 0, 1);
+  var dob = document.getElementById("r-dob"), skate = document.getElementById("r-skate"), gender = document.getElementById("r-gender");
+  var out = document.getElementById("r-cat"), note = document.getElementById("r-cat-note");
+  function ageOn(d) {
+    var a = REF.getFullYear() - d.getFullYear();
+    if (REF.getMonth() < d.getMonth() || (REF.getMonth() === d.getMonth() && REF.getDate() < d.getDate())) a--;
+    return a;
+  }
+  function update() {
+    if (!dob.value) { out.textContent = "Enter a date of birth"; return; }
+    var a = ageOn(new Date(dob.value + "T00:00:00"));
+    if (a < 3) { out.textContent = "Too young to register"; note.textContent = "Skaters must be at least 3 on 1 January 2027."; return; }
+    var band = BANDS.find(function (b) { return a <= b[0]; })[1];
+    out.textContent = skate.value + " · " + band + " · " + gender.value + "s";
+    note.textContent = "Age " + a + " on 1 January 2027.";
+  }
+  [dob, skate, gender].forEach(function (el) { el.addEventListener("input", update); el.addEventListener("change", update); });
+  document.getElementById("reg-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var s = document.getElementById("r-status");
+    var missing = [].filter.call(this.querySelectorAll("[required]"), function (el) { return !el.value.trim(); });
+    s.hidden = false;
+    if (missing.length) { s.textContent = "Please fill in the skater's name, date of birth and a mobile number."; missing[0].focus(); return; }
+    s.textContent = "Form complete. Registrations are not saved yet, so please also register through your club.";
+  });
+})();
+</script>
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-cols">
+      <div><img class="foot-logo" src="img/ddrsa-logo-96.png" alt="" width="72" height="72"><h3>DDRSA</h3><p>Dhanbad District Roller Skating Association, affiliated with <span class="ph">state speed skating association</span> and <span class="ph">national federation</span>.</p></div>
+      <div><h3>Skaters</h3><ul>
+        <li><a href="registration.html">Annual registration</a></li>
+        <li><a href="registration.html#portal">Skater login</a></li>
+        <li><a href="championships.html#results">Results</a></li>
+        <li><a href="championships.html#rankings">District rankings</a></li></ul></div>
+      <div><h3>Association</h3><ul>
+        <li><a href="about.html#bearers">Office bearers</a></li>
+        <li><a href="about.html#clubs">Affiliated clubs</a></li>
+        <li><a href="officials.html">Coaches &amp; referees</a></li>
+        <li><a href="news.html">News</a></li></ul></div>
+      <div><h3>Follow</h3><ul>
+        <li><a href="https://www.facebook.com/profile.php?id=61550527074997" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="contact.html">Contact us</a></li>
+        <li><a href="contact.html#disclaimer">Disclaimer</a></li></ul></div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 DDRSA. All rights reserved.</span><span>Last updated 13 Oct 2026</span></div>
+  </div>
+</footer>
+</body>
+</html>

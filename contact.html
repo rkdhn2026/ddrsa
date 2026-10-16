@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contact · DDRSA</title>
+<meta name="description" content="DDRSA, the Dhanbad District Roller Skating Association: skater registration, championships, results, coaches, referees and news.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;1,700;1,800&family=JetBrains+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="img/ddrsa-logo-32.png">
+</head>
+<body>
+<div class="topbar">
+  <div class="wrap">
+    <span><span class="ph">info@ddrsa.org</span> · <span class="ph">+91 00000 00000</span></span>
+    <span class="links">
+      <a href="https://www.facebook.com/profile.php?id=61550527074997" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://www.facebook.com/profile.php?id=61550527074997" target="_blank" rel="noopener">YouTube</a>
+      <a href="contact.html#disclaimer">Disclaimer</a>
+      <a class="login" href="registration.html#portal">Skater login</a>
+    </span>
+  </div>
+</div>
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img class="brand-mark" src="img/ddrsa-logo-192.png" alt="DDRSA logo" width="56" height="56">
+      <span class="brand-name">DDRSA<span class="brand-sub">Dhanbad District Roller Skating Association</span></span>
+    </a>
+    <nav aria-label="Main">
+      <ul class="nav">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="championships.html">Championships</a></li>
+      <li><a href="officials.html">Coaches &amp; Referees</a></li>
+      <li><a href="news.html">News &amp; Gallery</a></li>
+      <li><a href="contact.html" aria-current="page">Contact</a></li>
+      <li class="cta"><a href="registration.html">Register 2026-27</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<main>
+<div class="wrap">
+  <section class="page-head">
+    <p class="eyebrow">Contact</p>
+    <h1>Talk to us</h1>
+    <p class="lede">Questions about registration, events or clubs? Send a message or reach the office directly.</p>
+    
+  </section>
+  <div class="lanes" aria-hidden="true"></div>
+
+  <section class="section split">
+    <div class="stack">
+      <h2>Office</h2>
+      <dl class="contact">
+        <dt>Phone</dt><dd><span class="ph">+91 00000 00000</span></dd>
+        <dt>Email</dt><dd><span class="ph">info@ddrsa.org</span></dd>
+        <dt>Address</dt><dd><span class="ph">Office address, City, State, PIN</span></dd>
+        <dt>Hours</dt><dd><span class="ph">Mon–Sat, 10:00–17:00</span></dd>
+        <dt>Facebook</dt><dd><a href="https://www.facebook.com/profile.php?id=61550527074997" target="_blank" rel="noopener">DDRSA on Facebook</a></dd>
+      </dl>
+    </div>
+    <div class="stack">
+      <h2>Send a message</h2>
+      <form id="contact-form" novalidate>
+        <div class="field"><label for="c-name">Your name</label><input id="c-name" required autocomplete="name"></div>
+        <div class="field"><label for="c-phone">Phone or email</label><input id="c-phone" required></div>
+        <div class="field"><label for="c-topic">About</label>
+          <select id="c-topic"><option>Skater registration</option><option>Championships and entries</option><option>Club affiliation</option><option>Coach or referee courses</option><option>Something else</option></select></div>
+        <div class="field"><label for="c-msg">Message</label><textarea id="c-msg" required></textarea></div>
+        <button class="btn btn-primary" type="submit">Send message</button>
+        <p class="form-note">This form is not connected to an inbox yet.</p>
+        <p id="c-status" class="notice" role="status" hidden></p>
+      </form>
+    </div>
+  </section>
+  <section class="section" id="disclaimer">
+    <h2>Disclaimer</h2>
+    <p>Information on this website is provided for skaters, parents and clubs. Event dates and results are confirmed only when published by the organising committee. Contact the office if you notice an error.</p>
+  </section>
+</div>
+</main>
+<script>
+document.getElementById("contact-form").addEventListener("submit", function (e) {
+  e.preventDefault();
+  var s = document.getElementById("c-status");
+  var missing = [].filter.call(this.querySelectorAll("[required]"), function (el) { return !el.value.trim(); });
+  s.hidden = false;
+  if (missing.length) { s.textContent = "Please fill in your name, a way to reach you, and a message."; missing[0].focus(); return; }
+  s.textContent = "Thanks. This form is not connected yet, so please call or email the office directly.";
+});
+</script>
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-cols">
+      <div><img class="foot-logo" src="img/ddrsa-logo-96.png" alt="" width="72" height="72"><h3>DDRSA</h3><p>Dhanbad District Roller Skating Association, affiliated with <span class="ph">state speed skating association</span> and <span class="ph">national federation</span>.</p></div>
+      <div><h3>Skaters</h3><ul>
+        <li><a href="registration.html">Annual registration</a></li>
+        <li><a href="registration.html#portal">Skater login</a></li>
+        <li><a href="championships.html#results">Results</a></li>
+        <li><a href="championships.html#rankings">District rankings</a></li></ul></div>
+      <div><h3>Association</h3><ul>
+        <li><a href="about.html#bearers">Office bearers</a></li>
+        <li><a href="about.html#clubs">Affiliated clubs</a></li>
+        <li><a href="officials.html">Coaches &amp; referees</a></li>
+        <li><a href="news.html">News</a></li></ul></div>
+      <div><h3>Follow</h3><ul>
+        <li><a href="https://www.facebook.com/profile.php?id=61550527074997" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="contact.html">Contact us</a></li>
+        <li><a href="contact.html#disclaimer">Disclaimer</a></li></ul></div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 DDRSA. All rights reserved.</span><span>Last updated 13 Oct 2026</span></div>
+  </div>
+</footer>
+</body>
+</html>
