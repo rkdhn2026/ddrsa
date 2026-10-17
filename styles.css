@@ -279,3 +279,4 @@ dl.contact dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .nav .sub a:hover { background: color-mix(in srgb, var(--lane) 10%, var(--surface)); color: var(--lane); }
 .section.tight { padding-bottom: 0; }
 .section.split h3 { margin-bottom: 4px; }
+.card-img { width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; border-radius: var(--radius); }
