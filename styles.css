@@ -261,3 +261,8 @@ dl.contact dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .disc-card:hover { border-color: var(--lane); transform: translateY(-2px); }
 .disc-icon { width: 52px; height: 52px; border-radius: 10px; display: grid; place-items: center; color: var(--lane); background: color-mix(in srgb, var(--lane) 10%, var(--surface)); border: 1px solid color-mix(in srgb, var(--lane) 25%, var(--surface)); }
 .disc-card h3 { font-size: 1.15rem; }
+
+/* Hero slide: track graphic top-left, headline beneath */
+.slide-hero { grid-template-columns: 1fr; justify-items: start; align-content: start; gap: 12px; }
+@media (min-width: 900px) { .slide-hero { grid-template-columns: 1fr; align-items: start; } }
+.slide-hero .track-art { width: min(100%, 360px); }
