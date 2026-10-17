@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Skaters list · DDRSA</title>
+<meta name="description" content="DDRSA, the Dhanbad District Roller Skating Association: skater registration, championships, results, coaches, referees and news.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;1,700;1,800&family=JetBrains+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="img/ddrsa-logo-32.png">
+</head>
+<body>
+<div class="topbar">
+  <div class="wrap">
+    <span>rollerskatingdhanbad@gmail.com · <span class="ph">+91 00000 00000</span></span>
+    <span class="links">
+      <a href="https://www.facebook.com/profile.php?id=61550527074997" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://www.facebook.com/profile.php?id=61550527074997" target="_blank" rel="noopener">YouTube</a>
+      <a href="contact.html#disclaimer">Disclaimer</a>
+    </span>
+  </div>
+</div>
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img class="brand-mark" src="img/ddrsa-logo-192.png" alt="DDRSA logo" width="56" height="56">
+      <span class="brand-name">DDRSA<span class="brand-sub">Dhanbad District Roller Skating Association</span></span>
+    </a>
+    <nav aria-label="Main">
+      <ul class="nav">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="championships.html">Championships</a></li>
+      <li><a href="skaters.html" aria-current="page">Skaters</a></li>
+      <li><a href="officials.html">Coaches &amp; Referees</a></li>
+      <li><a href="news.html">News &amp; Gallery</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li class="cta has-sub">
+        <button type="button" class="sub-toggle" aria-expanded="false" aria-controls="reg-menu">Register 2026-27 <span aria-hidden="true">▾</span></button>
+        <ul class="sub" id="reg-menu" hidden>
+          <li><a href="registration.html#skater">Skater registration</a></li>
+          <li><a href="registration.html#coach">Coach registration</a></li>
+        </ul>
+      </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<main>
+<div class="wrap">
+  <section class="page-head">
+    <p class="eyebrow">Skaters</p>
+    <h1>Skaters list</h1>
+    <p class="lede">Registered DDRSA skaters, grouped by discipline and age group.</p>
+  </section>
+  <div class="lanes" aria-hidden="true"></div>
+
+  <section class="section" id="skater-list">
+    <div class="filters" role="group" aria-label="Discipline">
+      <button type="button" class="chip" data-filter="disc" data-value="all" aria-pressed="true">All</button>
+      <button type="button" class="chip" data-filter="disc" data-value="inline" aria-pressed="false">Inline Skating</button>
+      <button type="button" class="chip" data-filter="disc" data-value="quad" aria-pressed="false">Quad Skating</button>
+    </div>
+    <div class="filters" role="group" aria-label="Age group">
+      <button type="button" class="chip" data-filter="age" data-value="all" aria-pressed="true">All ages</button>
+      <button type="button" class="chip" data-filter="age" data-value="cadet-6-8" aria-pressed="false">Cadet <small>6 to 8</small></button>
+      <button type="button" class="chip" data-filter="age" data-value="cadet-10-12" aria-pressed="false">Cadet <small>10 to 12</small></button>
+      <button type="button" class="chip" data-filter="age" data-value="sub-junior" aria-pressed="false">Sub Junior <small>12 to 15</small></button>
+      <button type="button" class="chip" data-filter="age" data-value="junior" aria-pressed="false">Junior <small>15 to 18</small></button>
+      <button type="button" class="chip" data-filter="age" data-value="senior" aria-pressed="false">Senior <small>above 18</small></button>
+    </div>
+    <p class="notice" id="skater-empty" hidden>Skater list coming soon.</p>
+    <p class="notice" id="skater-none" hidden>No skaters in this group yet.</p>
+    <div class="table-wrap" id="skater-table-wrap" hidden><table>
+      <thead><tr><th>Name</th><th>Discipline</th><th>Age group</th><th>Club</th></tr></thead>
+      <tbody id="skater-rows"></tbody></table></div>
+  </section>
+</div>
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-cols">
+      <div><img class="foot-logo" src="img/ddrsa-logo-96.png" alt="" width="72" height="72"><h3>DDRSA</h3><p>Dhanbad District Roller Skating Association.</p></div>
+      <div><h3>Skaters</h3><ul>
+        <li><a href="skaters.html">Skaters list</a></li>
+        <li><a href="registration.html#skater">Skater registration</a></li>
+        <li><a href="registration.html#coach">Coach registration</a></li>
+        <li><a href="championships.html#results">Results</a></li>
+        <li><a href="championships.html#rankings">District rankings</a></li></ul></div>
+      <div><h3>Association</h3><ul>
+        <li><a href="about.html#bearers">Office bearers</a></li>
+        <li><a href="about.html#clubs">Affiliated clubs</a></li>
+        <li><a href="officials.html">Coaches &amp; referees</a></li>
+        <li><a href="news.html">News</a></li></ul></div>
+      <div><h3>Follow</h3><ul>
+        <li><a href="https://www.facebook.com/profile.php?id=61550527074997" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="contact.html">Contact us</a></li>
+        <li><a href="contact.html#disclaimer">Disclaimer</a></li></ul></div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 DDRSA. All rights reserved.</span><span>Last updated 13 Oct 2026</span></div>
+  </div>
+</footer>
+<script>
+// To add a skater, add one line to this list:
+// { name: "Full name", discipline: "inline" or "quad", group: one of the age group keys below, club: "Club name" }
+var SKATERS = [
+];
+var AGE_GROUPS = {
+  "cadet-6-8": "Cadet, 6 to 8",
+  "cadet-10-12": "Cadet, 10 to 12",
+  "sub-junior": "Sub Junior, 12 to 15",
+  "junior": "Junior, 15 to 18",
+  "senior": "Senior, above 18"
+};
+var DISCIPLINES = { inline: "Inline Skating", quad: "Quad Skating" };
+(function () {
+  var state = { disc: "all", age: "all" };
+  var rows = document.getElementById("skater-rows"), wrap = document.getElementById("skater-table-wrap");
+  var empty = document.getElementById("skater-empty"), none = document.getElementById("skater-none");
+  function cell(text) { var td = document.createElement("td"); td.textContent = text; return td; }
+  function render() {
+    rows.textContent = "";
+    var list = SKATERS.filter(function (s) {
+      return (state.disc === "all" || s.discipline === state.disc) && (state.age === "all" || s.group === state.age);
+    });
+    empty.hidden = SKATERS.length > 0;
+    none.hidden = !SKATERS.length || list.length > 0;
+    wrap.hidden = !list.length;
+    list.forEach(function (s) {
+      var tr = document.createElement("tr");
+      tr.appendChild(cell(s.name));
+      tr.appendChild(cell(DISCIPLINES[s.discipline] || ""));
+      tr.appendChild(cell(AGE_GROUPS[s.group] || ""));
+      tr.appendChild(cell(s.club || ""));
+      rows.appendChild(tr);
+    });
+  }
+  document.querySelectorAll(".chip").forEach(function (b) {
+    b.addEventListener("click", function () {
+      state[b.getAttribute("data-filter")] = b.getAttribute("data-value");
+      document.querySelectorAll('.chip[data-filter="' + b.getAttribute("data-filter") + '"]').forEach(function (o) {
+        o.setAttribute("aria-pressed", o === b ? "true" : "false");
+      });
+      render();
+    });
+  });
+  render();
+})();
+</script>
+<script src="site.js"></script>
+</body>
+</html>

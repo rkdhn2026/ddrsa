@@ -308,3 +308,10 @@ dl.contact dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .lightbox p { color: #fff; margin: 0; text-align: center; font-size: 0.95rem; }
 .lightbox button { position: absolute; background: rgba(255,255,255,0.92); color: #0e1a26; border: 0; border-radius: 999px; width: 44px; height: 44px; font-size: 1.4rem; cursor: pointer; }
 .lightbox .lb-close { top: 12px; right: 12px; } .lightbox .lb-prev { left: 8px; top: 50%; } .lightbox .lb-next { right: 8px; top: 50%; }
+
+/* Skaters list filters */
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.chip { font-family: var(--f-mono); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); cursor: pointer; min-height: 40px; }
+.chip small { font-size: inherit; color: var(--muted); }
+.chip[aria-pressed="true"] { background: var(--lane); border-color: var(--lane); color: #fff; }
+.chip[aria-pressed="true"] small { color: #fff; }
