@@ -289,3 +289,4 @@ dl.contact dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .photo-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
 .photo-row img { width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; object-position: center top; border-radius: 8px; }
 .slide-row { width: 100%; max-width: 520px; justify-self: center; }
+.card-img.photo32 { aspect-ratio: 3 / 2; }
