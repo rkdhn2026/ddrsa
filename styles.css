@@ -316,3 +316,9 @@ dl.contact dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .chip[aria-pressed="true"] { background: var(--lane); border-color: var(--lane); color: #fff; }
 .chip[aria-pressed="true"] small { color: #fff; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.field.wide { grid-column: 1 / -1; }
+.field textarea { font: inherit; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); color: var(--ink); width: 100%; box-sizing: border-box; resize: vertical; }
+.form-sub { margin: 24px 0 12px; font-size: 1rem; }
+.consent { display: grid; gap: 10px; margin: 16px 0; }
+.check { display: flex; gap: 10px; align-items: flex-start; font-size: 0.95rem; }
+.check input { margin-top: 4px; width: 18px; height: 18px; flex: none; }

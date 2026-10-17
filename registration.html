@@ -96,6 +96,17 @@
         <div class="field"><label for="r-phone">Mobile number</label><input id="r-phone" name="phone" inputmode="tel" required></div>
         <div class="field"><label for="r-email">Email</label><input id="r-email" name="email" type="email"></div>
       </div>
+      <h3 class="form-sub">Optional: for the skater's profile</h3>
+      <div class="form-grid">
+        <div class="field"><label for="r-insta">Instagram (link or @name)</label><input id="r-insta" name="instagram" autocomplete="off"></div>
+        <div class="field"><label for="r-fb">Facebook page (link)</label><input id="r-fb" name="facebook" inputmode="url" autocomplete="off"></div>
+        <div class="field"><label for="r-photo">Photo link</label><input id="r-photo" name="photo" inputmode="url" autocomplete="off"></div>
+        <div class="field wide"><label for="r-titles">Major titles and achievements</label><textarea id="r-titles" name="titles" rows="3" maxlength="1000"></textarea></div>
+      </div>
+      <div class="consent">
+        <label class="check"><input type="checkbox" id="r-agree-list" name="agreeList" required> I agree that the skater's name, discipline, age group and club may be shown on the DDRSA Skaters list once approved.</label>
+        <label class="check"><input type="checkbox" id="r-agree-profile" name="agreeProfile"> I also agree that the Instagram, Facebook, photo and titles above may be shown on the skater's public profile.</label>
+      </div>
       <div class="hp" aria-hidden="true"><label for="r-website">Leave this empty</label><input id="r-website" name="website" tabindex="-1" autocomplete="off"></div>
       <div class="result-box" aria-live="polite">
         <span class="eyebrow">Race category for 2026-27</span>
@@ -103,7 +114,7 @@
         <span class="form-note" id="r-cat-note">Age counted as on 31 December of the competition year.</span>
       </div>
       <button class="btn btn-primary" type="submit">Submit registration</button>
-      <p class="form-note">Your registration is checked by DDRSA before it is approved. Once approved, the skater's name, discipline, age group and club are shown on the <a href="skaters.html">Skaters list</a>. Date of birth, phone and email are never shown. By submitting you agree to this.</p>
+      <p class="form-note">Your registration is checked by DDRSA before it is approved. Date of birth, phone and email are never shown on the website.</p>
       <p id="r-status" class="notice" role="status" hidden></p>
     </form>
   </section>
@@ -164,13 +175,13 @@
   document.getElementById("reg-form").addEventListener("submit", function (e) {
     e.preventDefault();
     var s = document.getElementById("r-status");
-    var missing = [].filter.call(this.querySelectorAll("[required]"), function (el) { return !el.value.trim(); });
+    var missing = [].filter.call(this.querySelectorAll("[required]"), function (el) { return el.type === "checkbox" ? !el.checked : !el.value.trim(); });
     s.hidden = false;
-    if (missing.length) { s.textContent = "Please fill in the skater's name, date of birth and a mobile number."; missing[0].focus(); return; }
+    if (missing.length) { s.textContent = "Please fill in the skater's name, date of birth and a mobile number, and tick the agreement box."; missing[0].focus(); return; }
     var api = window.DDRSA_API;
     if (!api) { s.textContent = "Form complete. Registrations are not saved yet, so please also register through your club."; return; }
     var btn = this.querySelector("button[type=submit]"), form = this, data = {};
-    [].forEach.call(form.querySelectorAll("[name]"), function (el) { data[el.name] = el.value; });
+    [].forEach.call(form.querySelectorAll("[name]"), function (el) { data[el.name] = el.type === "checkbox" ? el.checked : el.value; });
     btn.disabled = true;
     s.textContent = "Sending...";
     fetch(api, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) })
