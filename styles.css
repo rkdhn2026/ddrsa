@@ -342,5 +342,3 @@ dl.contact dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .name-thumb { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; vertical-align: middle; margin-right: 10px; background: var(--line); }
 td:has(> .name-link) { white-space: nowrap; }
 @media (max-width: 560px) { .brand-mark { width: 64px; height: 64px; } }
-.site-head .wrap, .topbar .wrap { max-width: none; padding-inline: 16px; }
-@media (min-width: 700px) { .site-head .wrap, .topbar .wrap { padding-inline: 24px; } }
