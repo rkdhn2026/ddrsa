@@ -369,3 +369,4 @@ td:has(> .name-link) { white-space: nowrap; }
   .updates-view { overflow-y: auto; }
   .updates ul[aria-hidden] { display: none; }
 }
+.card[id] { scroll-margin-top: 150px; }
