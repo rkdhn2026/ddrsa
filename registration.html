@@ -109,8 +109,7 @@
       <div class="consent">
         <p class="form-sub">Skating is an adventure sport. Please always use protective gear and skate only at proper, designated places. DDRSA cannot be held responsible for any mishap or injury.</p>
         <label class="check"><input type="checkbox" id="r-agree-risk" name="agreeRisk" required> I understand that skating is an adventure sport. The skater will use protective gear and skate only at proper, designated places, and I accept that DDRSA cannot be held responsible for any mishap or injury.</label>
-        <label class="check"><input type="checkbox" id="r-agree-list" name="agreeList" required> I agree that the skater's name, discipline, age group and club may be shown on the DDRSA Skaters list once approved.</label>
-        <label class="check"><input type="checkbox" id="r-agree-profile" name="agreeProfile"> I also agree that the Instagram, Facebook, photo and titles above may be shown on the skater's public profile.</label>
+        <label class="check"><input type="checkbox" id="r-agree-list" name="agreeList" required> I agree that the skater's name, photo, discipline, age group and club, and any Instagram, Facebook and titles entered above, may be shown on the DDRSA Skaters list and the skater's public profile once approved.</label>
       </div>
       <div class="hp" aria-hidden="true"><label for="r-website">Leave this empty</label><input id="r-website" name="website" tabindex="-1" autocomplete="off"></div>
       <button class="btn btn-primary" type="submit">Submit registration</button>
@@ -183,6 +182,7 @@
     if (!api) { s.textContent = "Form complete. Registrations are not saved yet, so please also register through your club."; return; }
     var btn = this.querySelector("button[type=submit]"), form = this, data = {};
     [].forEach.call(form.querySelectorAll("[name]"), function (el) { if (el.type !== "file") data[el.name] = el.type === "checkbox" ? el.checked : el.value; });
+    data.agreeProfile = data.agreeList;   // one consent covers both the list and the public profile
     btn.disabled = true;
     s.textContent = "Sending...";
     readPhoto(document.getElementById("r-photo").files[0])
