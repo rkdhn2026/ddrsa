@@ -166,9 +166,9 @@ dl.contact dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 /* Hero slider */
 .slider { position: relative; margin-top: 24px; border-radius: var(--radius); overflow: hidden; background: linear-gradient(120deg, #e2f3f2 0%, #ffffff 60%, #fdecec 100%); color: var(--ink); border: 1px solid var(--line); }
 .slide { display: grid; gap: 18px; padding: 40px 24px 72px; min-height: 320px; align-content: center; }
-@media (min-width: 900px) { .slide { grid-template-columns: 1.2fr 1fr; align-items: center; padding: 56px 48px 80px; } }
+@media (min-width: 900px) { .slide { grid-template-columns: 1fr 1.1fr; align-items: center; padding: 40px 48px 72px; } }
 .slide > * { min-width: 0; }
-.slide h1, .slide h2 { color: var(--ink); font-size: var(--s4); }
+.slide h1, .slide h2 { color: var(--ink); font-size: clamp(1.82rem, 4.9vw, 3.22rem); }
 .slide h1 span, .slide h2 span { color: var(--lane); }
 .slide p { color: var(--muted); font-size: var(--s1); }
 .slide .eyebrow { color: var(--lane); }
@@ -280,15 +280,15 @@ dl.contact dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .section.tight { padding-bottom: 0; }
 .section.split h3 { margin-bottom: 4px; }
 .card-img { width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; border-radius: var(--radius); }
-.slide-photo { width: 100%; max-width: 280px; height: auto; aspect-ratio: 1 / 1; object-fit: cover; border-radius: var(--radius); justify-self: center; }
+.slide-photo { width: 100%; max-width: 364px; height: auto; aspect-ratio: 1 / 1; object-fit: cover; border-radius: var(--radius); justify-self: center; }
 .card-img.wide, .slide-photo.wide { aspect-ratio: 16 / 9; }
-.slide-photo.wide { max-width: 420px; }
+.slide-photo.wide { max-width: 546px; }
 .card-img.photo43, .slide-photo.photo43 { aspect-ratio: 4 / 3; }
-.slide-photo.photo43 { max-width: 380px; }
+.slide-photo.photo43 { max-width: 494px; }
 .card-img.wide, .slide-photo.wide { object-position: center top; }
 .photo-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
 .photo-row img { width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; object-position: center top; border-radius: 8px; }
-.slide-row { width: 100%; max-width: 520px; justify-self: center; }
+.slide-row { width: 100%; max-width: 676px; justify-self: center; }
 .card-img.photo32 { aspect-ratio: 3 / 2; }
 
 /* Photo albums */
