@@ -84,9 +84,10 @@
   var head = document.querySelector(".site-head"), nav = head && head.querySelector("nav");
   if (!head || !nav) return;
   function update() {
-    if (window.innerWidth <= 760) { head.style.top = ""; head.classList.remove("is-stuck"); return; }
+    if (window.innerWidth <= 760) { head.style.top = ""; document.documentElement.style.removeProperty("--head-h"); head.classList.remove("is-stuck"); return; }
     var top = -(nav.offsetTop - 8);
     head.style.top = top + "px";
+    document.documentElement.style.setProperty("--head-h", Math.max(0, head.offsetHeight + top) + "px");
     head.classList.toggle("is-stuck", head.getBoundingClientRect().top <= top + 1);
   }
   window.addEventListener("scroll", update, { passive: true });
