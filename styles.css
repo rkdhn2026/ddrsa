@@ -250,3 +250,14 @@ dl.contact dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .person { grid-template-columns: auto 1fr; align-items: center; gap: 16px; }
 .avatar { width: 96px; height: 96px; border-radius: 50%; overflow: hidden; display: grid; place-items: center; background: color-mix(in srgb, var(--lane) 14%, var(--surface)); color: var(--lane); font-family: var(--f-display); font-weight: 700; font-size: 2rem; border: 3px solid var(--lane); }
 .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Skating disciplines (home) */
+.section-head.center { justify-items: center; text-align: center; }
+.section-head.center .eyebrow { color: var(--signal); font-weight: 600; }
+.section-head.center .eyebrow::after { content: ""; display: block; width: 40px; height: 3px; margin: 6px auto 0; background: var(--signal); border-radius: 2px; }
+.section-head.center p:not(.eyebrow) { color: var(--muted); }
+.disc-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); }
+.disc-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 24px 16px; display: grid; justify-items: center; gap: 14px; text-align: center; transition: border-color .15s, transform .15s; }
+.disc-card:hover { border-color: var(--lane); transform: translateY(-2px); }
+.disc-icon { width: 52px; height: 52px; border-radius: 10px; display: grid; place-items: center; color: var(--lane); background: color-mix(in srgb, var(--lane) 10%, var(--surface)); border: 1px solid color-mix(in srgb, var(--lane) 25%, var(--surface)); }
+.disc-card h3 { font-size: 1.15rem; }
