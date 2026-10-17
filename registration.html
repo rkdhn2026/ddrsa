@@ -66,7 +66,7 @@
     <div class="stack">
       <h2>How it works</h2>
       <ul class="checks">
-        <li>Fill in the form below. Your race category is worked out from your date of birth.</li>
+        <li>Fill in the form below. DDRSA works out your race category from your date of birth.</li>
         <li>Pay the registration fee of <span class="ph">₹ amount</span> at your club or online.</li>
         <li>Your club verifies your birth certificate and photo.</li>
         <li>You get a DDRSA skater ID to use for every event entry.</li>
@@ -111,11 +111,6 @@
         <label class="check"><input type="checkbox" id="r-agree-profile" name="agreeProfile"> I also agree that the Instagram, Facebook, photo and titles above may be shown on the skater's public profile.</label>
       </div>
       <div class="hp" aria-hidden="true"><label for="r-website">Leave this empty</label><input id="r-website" name="website" tabindex="-1" autocomplete="off"></div>
-      <div class="result-box" aria-live="polite">
-        <span class="eyebrow">Race category for 2026-27</span>
-        <strong id="r-cat">Enter a date of birth</strong>
-        <span class="form-note" id="r-cat-note">Age counted as on 31 December of the competition year.</span>
-      </div>
       <button class="btn btn-primary" type="submit">Submit registration</button>
       <p class="form-note">Your registration is checked by DDRSA before it is approved. Date of birth, phone and email are never shown on the website.</p>
       <p id="r-status" class="notice" role="status" hidden></p>
@@ -155,10 +150,6 @@
 <script src="site-config.js"></script>
 <script>
 (function () {
-  // Age bands: [max age, label]. Same bands as the Skaters list and the sheet.
-  var BANDS = [[5, "Toddlers (under 6)"], [9, "Cadet (6 to 8)"], [11, "Cadet (10 to 12)"], [14, "Sub Junior (12 to 15)"], [17, "Junior (15 to 18)"], [200, "Senior (above 18)"]];
-  var YEAR = window.DDRSA_COMPETITION_YEAR || 2026;
-  var REF = new Date(YEAR, 11, 31);
   // Shrinks the chosen photo to at most 800 px (JPEG) so it is small enough to send with the form.
   function readPhoto(file) {
     return new Promise(function (resolve, reject) {
@@ -177,22 +168,6 @@
       img.src = url;
     });
   }
-  var dob = document.getElementById("r-dob"), skate = document.getElementById("r-skate"), gender = document.getElementById("r-gender");
-  var out = document.getElementById("r-cat"), note = document.getElementById("r-cat-note");
-  function ageOn(d) {
-    var a = REF.getFullYear() - d.getFullYear();
-    if (REF.getMonth() < d.getMonth() || (REF.getMonth() === d.getMonth() && REF.getDate() < d.getDate())) a--;
-    return a;
-  }
-  function update() {
-    if (!dob.value) { out.textContent = "Enter a date of birth"; return; }
-    var a = ageOn(new Date(dob.value + "T00:00:00"));
-    if (a < 3) { out.textContent = "Too young to register"; note.textContent = "Skaters must be at least 3 on 31 December " + YEAR + "."; return; }
-    var band = BANDS.find(function (b) { return a <= b[0]; })[1];
-    out.textContent = skate.value + " · " + band + " · " + gender.value + "s";
-    note.textContent = "Age " + a + " on 31 December " + YEAR + ".";
-  }
-  [dob, skate, gender].forEach(function (el) { el.addEventListener("input", update); el.addEventListener("change", update); });
   document.getElementById("reg-form").addEventListener("submit", function (e) {
     e.preventDefault();
     var s = document.getElementById("r-status");
@@ -214,7 +189,7 @@
       })
       .then(function () {
         s.textContent = "Thank you. Your registration has been received and will be checked by DDRSA. Please also bring your documents to your club.";
-        form.reset(); update();
+        form.reset();
       })
       .catch(function (err) { s.textContent = err && err.message === "type" ? "Please choose a photo file (JPG or PNG) for the skater, or leave the photo empty." : "Could not send the registration. Please check your connection and try again."; })
       .then(function () { btn.disabled = false; });
