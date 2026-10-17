@@ -322,3 +322,22 @@ dl.contact dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .consent { display: grid; gap: 10px; margin: 16px 0; }
 .check { display: flex; gap: 10px; align-items: flex-start; font-size: 0.95rem; }
 .check input { margin-top: 4px; width: 18px; height: 18px; flex: none; }
+
+.name-link { background: none; border: 0; padding: 0; font: inherit; font-weight: 600; color: var(--lane); text-decoration: underline; cursor: pointer; text-align: left; }
+.name-link:hover { color: var(--signal); }
+.profile { border: 1px solid var(--line); border-radius: 10px; padding: 0; width: min(92vw, 420px); background: var(--surface); color: var(--ink); }
+.profile::backdrop { background: rgba(10, 16, 24, 0.6); }
+.profile-close { position: absolute; top: 6px; right: 10px; background: none; border: 0; font-size: 1.8rem; line-height: 1; cursor: pointer; color: var(--muted); }
+.profile-body { padding: 24px 20px 20px; }
+.profile-pic { width: 160px; height: 200px; margin: 0 auto 14px; border-radius: 8px; overflow: hidden; background: var(--line); display: grid; place-items: center; }
+.profile-pic img { width: 100%; height: 100%; object-fit: cover; }
+.profile-pic.empty span { color: var(--muted); font-size: 0.9rem; }
+.profile-body h2 { margin: 0 0 10px; text-align: center; }
+.profile-body h3 { margin: 14px 0 4px; font-size: 1rem; }
+.profile-facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 0; }
+.profile-facts dt { color: var(--muted); }
+.profile-facts dd { margin: 0; }
+.profile-titles { margin: 0; white-space: pre-line; }
+.profile-links { display: flex; gap: 16px; margin: 14px 0 0; }
+.name-thumb { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; vertical-align: middle; margin-right: 10px; background: var(--line); }
+td:has(> .name-link) { white-space: nowrap; }

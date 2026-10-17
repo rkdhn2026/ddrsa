@@ -80,6 +80,10 @@
       <thead><tr><th>Name</th><th>Discipline</th><th>Age group</th><th>Club</th></tr></thead>
       <tbody id="skater-rows"></tbody></table></div>
   </section>
+  <dialog class="profile" id="skater-profile" aria-label="Skater profile">
+    <button type="button" class="profile-close" id="profile-close" aria-label="Close">&times;</button>
+    <div class="profile-body" id="profile-body"></div>
+  </dialog>
 </div>
 </main>
 <footer class="site-foot">
@@ -125,6 +129,37 @@ var DISCIPLINES = { inline: "Inline Skating", quad: "Quad Skating" };
   var rows = document.getElementById("skater-rows"), wrap = document.getElementById("skater-table-wrap");
   var empty = document.getElementById("skater-empty"), none = document.getElementById("skater-none");
   function cell(text) { var td = document.createElement("td"); td.textContent = text; return td; }
+  var dlg = document.getElementById("skater-profile"), body = document.getElementById("profile-body");
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
+  function openProfile(s) {
+    var p = s.profile || {};
+    body.textContent = "";
+    var pic = el("div", "profile-pic");
+    var photo = s.photo || p.photo;
+    if (photo) {
+      var img = document.createElement("img");
+      img.src = photo; img.alt = "Photo of " + s.name; img.referrerPolicy = "no-referrer";
+      img.addEventListener("error", function () { pic.textContent = ""; pic.classList.add("empty"); pic.appendChild(el("span", "", "No photo")); });
+      pic.appendChild(img);
+    } else { pic.classList.add("empty"); pic.appendChild(el("span", "", "No photo")); }
+    body.appendChild(pic);
+    body.appendChild(el("h2", "", s.name));
+    var dl = el("dl", "profile-facts");
+    [["Skater ID", s.id], ["Discipline", DISCIPLINES[s.discipline]], ["Age group", AGE_GROUPS[s.group]], ["Club", s.club]].forEach(function (f) {
+      if (!f[1]) return; dl.appendChild(el("dt", "", f[0])); dl.appendChild(el("dd", "", f[1]));
+    });
+    body.appendChild(dl);
+    if (p.titles) { body.appendChild(el("h3", "", "Titles and achievements")); body.appendChild(el("p", "profile-titles", p.titles)); }
+    var links = el("p", "profile-links");
+    [["Instagram", p.instagram], ["Facebook", p.facebook]].forEach(function (l) {
+      if (!l[1] || !/^https:\/\//i.test(l[1])) return;
+      var a = el("a", "", l[0]); a.href = l[1]; a.target = "_blank"; a.rel = "noopener"; links.appendChild(a);
+    });
+    if (links.childNodes.length) body.appendChild(links);
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
+  }
+  document.getElementById("profile-close").addEventListener("click", function () { dlg.close(); });
+  dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
   function render() {
     rows.textContent = "";
     var list = SKATERS.filter(function (s) {
@@ -135,7 +170,11 @@ var DISCIPLINES = { inline: "Inline Skating", quad: "Quad Skating" };
     wrap.hidden = !list.length;
     list.forEach(function (s) {
       var tr = document.createElement("tr");
-      tr.appendChild(cell(s.name));
+      var nameTd = document.createElement("td"), nameBtn = document.createElement("button");
+      nameBtn.type = "button"; nameBtn.className = "name-link"; nameBtn.textContent = s.name;
+      nameBtn.addEventListener("click", function () { openProfile(s); });
+      if (s.photo) { var th = document.createElement("img"); th.src = s.photo; th.alt = ""; th.className = "name-thumb"; th.referrerPolicy = "no-referrer"; th.addEventListener("error", function () { th.remove(); }); nameTd.appendChild(th); }
+      nameTd.appendChild(nameBtn); tr.appendChild(nameTd);
       tr.appendChild(cell(DISCIPLINES[s.discipline] || ""));
       tr.appendChild(cell(AGE_GROUPS[s.group] || ""));
       tr.appendChild(cell(s.club || ""));

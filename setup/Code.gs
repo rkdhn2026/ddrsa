@@ -5,7 +5,8 @@
  *   as a new row in the "Registrations" sheet with Status = Pending and a Skater ID.
  * - doGet:  the Skaters page asks for the public list. Only rows where Status is
  *   "Approved" are returned. Always: id, name, discipline, group, club.
- *   Instagram, Facebook, photo and titles are returned ONLY when the row has
+ *   The photo is returned for every approved skater who agreed to the public list (it is mandatory on the form).
+ *   Instagram, Facebook and titles are returned ONLY when the row has
  *   "Show on public profile" = Yes (the parent or skater ticked the consent box).
  *   Date of birth, phone, email, parent details and the Aadhaar number are never sent out.
  *
@@ -147,13 +148,13 @@ function doGet() {
       name: String(r[col("Name")]).trim(),
       discipline: disc === "inline" || disc === "quad" ? disc : "",
       group: GROUPS.indexOf(group) >= 0 ? group : "",
-      club: String(r[col("Club")]).trim()
+      club: String(r[col("Club")]).trim(),
+      photo: publicPhoto_(r[col("Photo (Drive link)")])
     };
     if (String(r[col("Show on public profile")]).trim().toLowerCase() === "yes") {
       s.profile = {
         instagram: link_(r[col("Instagram")], "instagram.com"),
         facebook: link_(r[col("Facebook")], ""),
-        photo: publicPhoto_(r[col("Photo (Drive link)")]),
         titles: String(r[col("Titles and achievements")]).trim()
       };
     }
