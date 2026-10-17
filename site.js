@@ -32,4 +32,42 @@
       status.textContent = "Form complete. Registrations are not saved yet, so please also register through your club or the office.";
     });
   });
+  // Photo albums: show/hide grid and lightbox viewer
+  document.querySelectorAll("[data-album-toggle]").forEach(function (btn) {
+    var grid = document.getElementById(btn.getAttribute("aria-controls"));
+    btn.addEventListener("click", function () {
+      var open = grid.hidden;
+      grid.hidden = !open;
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      btn.textContent = open ? "Hide photos" : btn.getAttribute("data-label");
+    });
+    btn.setAttribute("data-label", btn.textContent);
+  });
+  var lbLinks = [].slice.call(document.querySelectorAll("[data-lightbox]"));
+  if (lbLinks.length && typeof HTMLDialogElement === "function") {
+    var dlg = document.createElement("dialog");
+    dlg.className = "lightbox";
+    dlg.setAttribute("aria-label", "Photo viewer");
+    dlg.innerHTML = '<div class="lightbox-inner"><img alt=""><p></p><button type="button" class="lb-close" aria-label="Close">\u00d7</button><button type="button" class="lb-prev" aria-label="Previous photo">\u2039</button><button type="button" class="lb-next" aria-label="Next photo">\u203a</button></div>';
+    document.body.appendChild(dlg);
+    var big = dlg.querySelector("img"), cap = dlg.querySelector("p"), cur = 0;
+    function showPhoto(n) {
+      cur = (n + lbLinks.length) % lbLinks.length;
+      var a = lbLinks[cur];
+      big.src = a.getAttribute("href");
+      big.alt = a.querySelector("img").alt;
+      cap.textContent = a.getAttribute("data-caption") + " (" + (cur + 1) + " of " + lbLinks.length + ")";
+    }
+    lbLinks.forEach(function (a, k) {
+      a.addEventListener("click", function (e) { e.preventDefault(); showPhoto(k); dlg.showModal(); });
+    });
+    dlg.querySelector(".lb-close").addEventListener("click", function () { dlg.close(); });
+    dlg.querySelector(".lb-prev").addEventListener("click", function () { showPhoto(cur - 1); });
+    dlg.querySelector(".lb-next").addEventListener("click", function () { showPhoto(cur + 1); });
+    dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowLeft") showPhoto(cur - 1);
+      if (e.key === "ArrowRight") showPhoto(cur + 1);
+    });
+  }
 })();
