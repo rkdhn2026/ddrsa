@@ -102,7 +102,8 @@
       <div class="form-grid">
         <div class="field"><label for="r-insta">Instagram, link or @name (optional)</label><input id="r-insta" name="instagram" autocomplete="off"></div>
         <div class="field"><label for="r-fb">Facebook page link (optional)</label><input id="r-fb" name="facebook" inputmode="url" autocomplete="off"></div>
-        <div class="field"><label for="r-photo">Photo link (optional)</label><input id="r-photo" name="photo" inputmode="url" autocomplete="off"></div>
+        <div class="field wide"><label for="r-photo">Photo of the skater (optional)</label><input id="r-photo" name="photofile" type="file" accept="image/*">
+          <span class="form-note">Choose a photo from your phone or computer. It is shrunk automatically and sent with the form. It is only shown on the public profile if you tick the profile box below.</span></div>
         <div class="field wide"><label for="r-titles">Major titles and achievements (optional)</label><textarea id="r-titles" name="titles" rows="3" maxlength="1000"></textarea></div>
       </div>
       <div class="consent">
@@ -154,10 +155,28 @@
 <script src="site-config.js"></script>
 <script>
 (function () {
-  // Age bands: [max age, label]. Edit to match the federation's rules.
-  var BANDS = [[5, "Under 6"], [7, "6–8 years"], [9, "8–10 years"], [11, "10–12 years"], [13, "12–14 years"], [15, "14–16 years"], [29, "Above 16 (Senior)"], [200, "Masters 30+"]];
+  // Age bands: [max age, label]. Same bands as the Skaters list and the sheet.
+  var BANDS = [[5, "Toddlers (under 6)"], [9, "Cadet (6 to 8)"], [11, "Cadet (10 to 12)"], [14, "Sub Junior (12 to 15)"], [17, "Junior (15 to 18)"], [200, "Senior (above 18)"]];
   var YEAR = window.DDRSA_COMPETITION_YEAR || 2026;
   var REF = new Date(YEAR, 11, 31);
+  // Shrinks the chosen photo to at most 800 px (JPEG) so it is small enough to send with the form.
+  function readPhoto(file) {
+    return new Promise(function (resolve, reject) {
+      if (!file) return resolve(null);
+      if (file.type.indexOf("image/") !== 0) return reject(new Error("type"));
+      var img = new Image(), url = URL.createObjectURL(file);
+      img.onload = function () {
+        var scale = Math.min(1, 800 / Math.max(img.width, img.height));
+        var c = document.createElement("canvas");
+        c.width = Math.round(img.width * scale); c.height = Math.round(img.height * scale);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        resolve({ type: "image/jpeg", data: c.toDataURL("image/jpeg", 0.8).split(",")[1] });
+      };
+      img.onerror = function () { reject(new Error("type")); };
+      img.src = url;
+    });
+  }
   var dob = document.getElementById("r-dob"), skate = document.getElementById("r-skate"), gender = document.getElementById("r-gender");
   var out = document.getElementById("r-cat"), note = document.getElementById("r-cat-note");
   function ageOn(d) {
@@ -185,15 +204,19 @@
     var api = window.DDRSA_API;
     if (!api) { s.textContent = "Form complete. Registrations are not saved yet, so please also register through your club."; return; }
     var btn = this.querySelector("button[type=submit]"), form = this, data = {};
-    [].forEach.call(form.querySelectorAll("[name]"), function (el) { data[el.name] = el.type === "checkbox" ? el.checked : el.value; });
+    [].forEach.call(form.querySelectorAll("[name]"), function (el) { if (el.type !== "file") data[el.name] = el.type === "checkbox" ? el.checked : el.value; });
     btn.disabled = true;
     s.textContent = "Sending...";
-    fetch(api, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) })
+    readPhoto(document.getElementById("r-photo").files[0])
+      .then(function (p) {
+        if (p) data.photoFile = p;
+        return fetch(api, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) });
+      })
       .then(function () {
         s.textContent = "Thank you. Your registration has been received and will be checked by DDRSA. Please also bring your documents to your club.";
         form.reset(); update();
       })
-      .catch(function () { s.textContent = "Could not send the registration. Please check your connection and try again."; })
+      .catch(function (err) { s.textContent = err && err.message === "type" ? "Please choose a photo file (JPG or PNG) for the skater, or leave the photo empty." : "Could not send the registration. Please check your connection and try again."; })
       .then(function () { btn.disabled = false; });
   });
 })();

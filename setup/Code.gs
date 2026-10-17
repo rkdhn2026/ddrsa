@@ -5,7 +5,7 @@
  *   as a new row in the "Registrations" sheet with Status = Pending and a Skater ID.
  * - doGet:  the Skaters page asks for the public list. Only rows where Status is
  *   "Approved" are returned. Always: id, name, discipline, group, club.
- *   Instagram, Facebook, photo link and titles are returned ONLY when the row has
+ *   Instagram, Facebook, photo and titles are returned ONLY when the row has
  *   "Show on public profile" = Yes (the parent or skater ticked the consent box).
  *   Date of birth, phone, email, parent details and the Aadhaar number are never sent out.
  *
@@ -16,10 +16,12 @@
 var SHEET_NAME = "Registrations";
 var HEADERS = ["Skater ID", "Timestamp", "Status", "Name", "Discipline", "Age group", "Club",
                "Date of birth", "Gender", "Parent or guardian", "Mobile", "Email", "Skate type submitted",
-               "Instagram", "Facebook", "Photo link", "Titles and achievements",
+               "Instagram", "Facebook", "Photo (Drive link)", "Titles and achievements",
                "Agreed to public list", "Show on public profile", "Aadhaar number"];
 // Age is counted on 31 December of this year. Change it each season.
 var COMPETITION_YEAR = 2026;
+var PHOTO_FOLDER_NAME = "DDRSA skater photos";   // separate from anything else; created on first use
+var MAX_PHOTO_BYTES = 1024 * 1024;
 var GROUPS = ["toddlers", "cadet-6-8", "cadet-10-12", "sub-junior", "junior", "senior"];
 
 function getSheet_() {
@@ -37,6 +39,33 @@ function getSheet_() {
 function clean_(value, max) {
   var s = String(value == null ? "" : value).trim().substring(0, max || 200);
   return /^[=+\-@]/.test(s) ? "'" + s : s;
+}
+
+// Saves the (already shrunk) photo in the photo folder. Files stay private until the skater
+// is approved AND the profile box was ticked; doGet then makes that one photo viewable.
+function savePhoto_(skaterId, photo) {
+  if (!photo || !photo.data || (photo.type !== "image/jpeg" && photo.type !== "image/png")) return "";
+  var bytes = Utilities.base64Decode(photo.data);
+  if (bytes.length > MAX_PHOTO_BYTES) return "";
+  var folders = DriveApp.getFoldersByName(PHOTO_FOLDER_NAME);
+  var folder = folders.hasNext() ? folders.next() : DriveApp.createFolder(PHOTO_FOLDER_NAME);
+  var ext = photo.type === "image/png" ? ".png" : ".jpg";
+  return folder.createFile(Utilities.newBlob(bytes, photo.type, skaterId + ext)).getUrl();
+}
+
+// Makes one approved skater's photo viewable by link and returns an image address for the website.
+function publicPhoto_(driveUrl) {
+  var m = /[-\w]{25,}/.exec(String(driveUrl || ""));
+  if (!m) return "";
+  try {
+    var file = DriveApp.getFileById(m[0]);
+    if (file.getSharingAccess() !== DriveApp.Access.ANYONE_WITH_LINK) {
+      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    }
+    return "https://drive.google.com/thumbnail?id=" + m[0] + "&sz=w600";
+  } catch (err) {
+    return "";
+  }
 }
 
 // Stable ID that never changes: DDRSA-0001, DDRSA-0002, ...
@@ -83,13 +112,14 @@ function doPost(e) {
     if (!/^\d{12}$/.test(aadhaar)) return json_({ ok: false, error: "Aadhaar number must be 12 digits." });
     var skate = clean_(data.skate, 20);
     var discipline = skate === "Inline" || skate === "Quad" ? skate : "";
+    var skaterId = nextId_();
     var row = {
-      "Skater ID": nextId_(), "Timestamp": new Date(), "Status": "Pending", "Name": name,
+      "Skater ID": skaterId, "Timestamp": new Date(), "Status": "Pending", "Name": name,
       "Discipline": discipline, "Age group": suggestGroup_(clean_(data.dob, 10)), "Club": clean_(data.club, 100),
       "Date of birth": clean_(data.dob, 10), "Gender": clean_(data.gender, 10),
       "Parent or guardian": parent, "Mobile": phone, "Email": clean_(data.email, 100),
       "Skate type submitted": skate, "Instagram": clean_(data.instagram, 150), "Facebook": clean_(data.facebook, 200),
-      "Photo link": clean_(data.photo, 300), "Titles and achievements": clean_(data.titles, 1000),
+      "Photo (Drive link)": savePhoto_(skaterId, data.photoFile), "Titles and achievements": clean_(data.titles, 1000),
       "Agreed to public list": data.agreeList ? "Yes" : "No", "Show on public profile": data.agreeProfile ? "Yes" : "No",
       "Aadhaar number": "'" + aadhaar
     };
@@ -123,7 +153,7 @@ function doGet() {
       s.profile = {
         instagram: link_(r[col("Instagram")], "instagram.com"),
         facebook: link_(r[col("Facebook")], ""),
-        photo: link_(r[col("Photo link")], ""),
+        photo: publicPhoto_(r[col("Photo (Drive link)")]),
         titles: String(r[col("Titles and achievements")]).trim()
       };
     }
