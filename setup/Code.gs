@@ -7,7 +7,7 @@
  *   "Approved" are returned. Always: id, name, discipline, group, club.
  *   Instagram, Facebook, photo link and titles are returned ONLY when the row has
  *   "Show on public profile" = Yes (the parent or skater ticked the consent box).
- *   Date of birth, phone, email and parent details are never sent out.
+ *   Date of birth, phone, email, parent details and the Aadhaar number are never sent out.
  *
  * To approve a skater: open the sheet and change Status from Pending to Approved
  * (check Discipline and Age group first, you can edit them).
@@ -17,7 +17,7 @@ var SHEET_NAME = "Registrations";
 var HEADERS = ["Skater ID", "Timestamp", "Status", "Name", "Discipline", "Age group", "Club",
                "Date of birth", "Gender", "Parent or guardian", "Mobile", "Email", "Skate type submitted",
                "Instagram", "Facebook", "Photo link", "Titles and achievements",
-               "Agreed to public list", "Show on public profile"];
+               "Agreed to public list", "Show on public profile", "Aadhaar number"];
 // Age is counted on 31 December of this year. Change it each season.
 var COMPETITION_YEAR = 2026;
 var GROUPS = ["toddlers", "cadet-6-8", "cadet-10-12", "sub-junior", "junior", "senior"];
@@ -78,17 +78,20 @@ function doPost(e) {
     var data = JSON.parse(e.postData.contents);
     if (data.website) return json_({ ok: true });            // honeypot: bots fill this in
     var name = clean_(data.name, 100), phone = clean_(data.phone, 20);
-    if (!name || !phone) return json_({ ok: false, error: "Name and mobile number are required." });
+    var parent = clean_(data.parent, 100), aadhaar = String(data.aadhaar || "").replace(/\s/g, "");
+    if (!name || !phone || !parent || !data.dob || !data.gender) return json_({ ok: false, error: "Required details are missing." });
+    if (!/^\d{12}$/.test(aadhaar)) return json_({ ok: false, error: "Aadhaar number must be 12 digits." });
     var skate = clean_(data.skate, 20);
     var discipline = skate === "Inline" || skate === "Quad" ? skate : "";
     var row = {
       "Skater ID": nextId_(), "Timestamp": new Date(), "Status": "Pending", "Name": name,
       "Discipline": discipline, "Age group": suggestGroup_(clean_(data.dob, 10)), "Club": clean_(data.club, 100),
       "Date of birth": clean_(data.dob, 10), "Gender": clean_(data.gender, 10),
-      "Parent or guardian": clean_(data.parent, 100), "Mobile": phone, "Email": clean_(data.email, 100),
+      "Parent or guardian": parent, "Mobile": phone, "Email": clean_(data.email, 100),
       "Skate type submitted": skate, "Instagram": clean_(data.instagram, 150), "Facebook": clean_(data.facebook, 200),
       "Photo link": clean_(data.photo, 300), "Titles and achievements": clean_(data.titles, 1000),
-      "Agreed to public list": data.agreeList ? "Yes" : "No", "Show on public profile": data.agreeProfile ? "Yes" : "No"
+      "Agreed to public list": data.agreeList ? "Yes" : "No", "Show on public profile": data.agreeProfile ? "Yes" : "No",
+      "Aadhaar number": "'" + aadhaar
     };
     getSheet_().appendRow(HEADERS.map(function (h) { return row[h]; }));
     return json_({ ok: true });

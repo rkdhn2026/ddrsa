@@ -90,18 +90,20 @@
         <div class="field"><label for="r-name">Skater's full name</label><input id="r-name" name="name" required autocomplete="name"></div>
         <div class="field"><label for="r-dob">Date of birth</label><input id="r-dob" name="dob" type="date" required></div>
         <div class="field"><label for="r-gender">Gender</label><select id="r-gender" name="gender"><option>Girl</option><option>Boy</option></select></div>
-        <div class="field"><label for="r-skate">Skate type</label><select id="r-skate" name="skate"><option>Beginner</option><option>Quad</option><option selected>Inline</option></select></div>
-        <div class="field"><label for="r-club">Club</label><select id="r-club" name="club"><option>Dhanbad Skating Academy</option><option>Black Diamond</option><option>Independent</option></select></div>
-        <div class="field"><label for="r-parent">Parent / guardian</label><input id="r-parent" name="parent"></div>
+        <div class="field"><label for="r-skate">Skate type</label><select id="r-skate" name="skate" required><option>Inline</option><option>Quad</option></select></div>
+        <div class="field"><label for="r-club">Club (optional)</label><select id="r-club" name="club"><option value="">Not listed or none</option><option>Dhanbad Skating Academy</option><option>Black Diamond</option><option>Independent</option></select></div>
+        <div class="field"><label for="r-parent">Parent / guardian name</label><input id="r-parent" name="parent" required></div>
         <div class="field"><label for="r-phone">Mobile number</label><input id="r-phone" name="phone" inputmode="tel" required></div>
-        <div class="field"><label for="r-email">Email</label><input id="r-email" name="email" type="email"></div>
+        <div class="field"><label for="r-email">Email (optional)</label><input id="r-email" name="email" type="email"></div>
+        <div class="field wide"><label for="r-aadhaar">Aadhaar number (12 digits)</label><input id="r-aadhaar" name="aadhaar" inputmode="numeric" maxlength="14" autocomplete="off" required>
+          <span class="form-note">Used only by DDRSA to verify the skater's identity and age. It is kept privately and is never shown on the website.</span></div>
       </div>
       <h3 class="form-sub">Optional: for the skater's profile</h3>
       <div class="form-grid">
-        <div class="field"><label for="r-insta">Instagram (link or @name)</label><input id="r-insta" name="instagram" autocomplete="off"></div>
-        <div class="field"><label for="r-fb">Facebook page (link)</label><input id="r-fb" name="facebook" inputmode="url" autocomplete="off"></div>
-        <div class="field"><label for="r-photo">Photo link</label><input id="r-photo" name="photo" inputmode="url" autocomplete="off"></div>
-        <div class="field wide"><label for="r-titles">Major titles and achievements</label><textarea id="r-titles" name="titles" rows="3" maxlength="1000"></textarea></div>
+        <div class="field"><label for="r-insta">Instagram, link or @name (optional)</label><input id="r-insta" name="instagram" autocomplete="off"></div>
+        <div class="field"><label for="r-fb">Facebook page link (optional)</label><input id="r-fb" name="facebook" inputmode="url" autocomplete="off"></div>
+        <div class="field"><label for="r-photo">Photo link (optional)</label><input id="r-photo" name="photo" inputmode="url" autocomplete="off"></div>
+        <div class="field wide"><label for="r-titles">Major titles and achievements (optional)</label><textarea id="r-titles" name="titles" rows="3" maxlength="1000"></textarea></div>
       </div>
       <div class="consent">
         <label class="check"><input type="checkbox" id="r-agree-list" name="agreeList" required> I agree that the skater's name, discipline, age group and club may be shown on the DDRSA Skaters list once approved.</label>
@@ -177,7 +179,9 @@
     var s = document.getElementById("r-status");
     var missing = [].filter.call(this.querySelectorAll("[required]"), function (el) { return el.type === "checkbox" ? !el.checked : !el.value.trim(); });
     s.hidden = false;
-    if (missing.length) { s.textContent = "Please fill in the skater's name, date of birth and a mobile number, and tick the agreement box."; missing[0].focus(); return; }
+    var aad = document.getElementById("r-aadhaar");
+    if (aad.value.trim() && !/^\d{12}$/.test(aad.value.replace(/\s/g, ""))) { s.textContent = "The Aadhaar number must be 12 digits."; aad.focus(); return; }
+    if (missing.length) { s.textContent = "Please fill in the skater's name, date of birth, Aadhaar number, parent name and mobile number, and tick the agreement box."; missing[0].focus(); return; }
     var api = window.DDRSA_API;
     if (!api) { s.textContent = "Form complete. Registrations are not saved yet, so please also register through your club."; return; }
     var btn = this.querySelector("button[type=submit]"), form = this, data = {};
