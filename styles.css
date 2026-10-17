@@ -52,10 +52,10 @@ p { margin: 0; max-width: 65ch; }
 .site-head { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); border-bottom: 1px solid var(--line); }
 .site-head .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: 12px; }
 .brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; }
-.brand-mark { width: 84px; height: 84px; flex: none; }
+.brand-mark { width: 96px; height: 96px; flex: none; }
 .foot-logo { width: 72px; height: 72px; }
-.brand-name { font-family: var(--f-display); font-weight: 800; font-style: italic; font-size: 1.6rem; letter-spacing: 0.02em; line-height: 1; }
-.brand-sub { display: block; font-family: var(--f-mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-style: normal; font-weight: 400; }
+.brand-name { font-family: var(--f-display); font-weight: 800; font-style: italic; font-size: 2.05rem; letter-spacing: 0.02em; line-height: 1; }
+.brand-sub { display: block; font-family: var(--f-mono); font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-style: normal; font-weight: 400; }
 .nav { display: flex; flex-wrap: wrap; gap: 4px 18px; list-style: none; margin: 0; padding: 0; }
 .nav a { color: var(--ink); text-decoration: none; font-family: var(--f-display); font-weight: 600; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.03em; padding-block: 4px; border-bottom: 3px solid transparent; }
 .nav a:hover { border-bottom-color: var(--line); }
@@ -370,3 +370,4 @@ td:has(> .name-link) { white-space: nowrap; }
   .updates ul[aria-hidden] { display: none; }
 }
 .card[id] { scroll-margin-top: 150px; }
+@media (max-width: 560px) { .brand-mark { width: 64px; height: 64px; } .brand-name { font-size: 1.7rem; } .brand-sub { font-size: 0.68rem; } }
