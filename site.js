@@ -78,3 +78,19 @@
     });
   }
 })();
+
+// Sticky header: only the menu bar stays on screen once the big logo row has scrolled away.
+(function () {
+  var head = document.querySelector(".site-head"), nav = head && head.querySelector("nav");
+  if (!head || !nav) return;
+  function update() {
+    if (window.innerWidth <= 760) { head.style.top = ""; head.classList.remove("is-stuck"); return; }
+    var top = -(nav.offsetTop - 8);
+    head.style.top = top + "px";
+    head.classList.toggle("is-stuck", head.getBoundingClientRect().top <= top + 1);
+  }
+  window.addEventListener("scroll", update, { passive: true });
+  window.addEventListener("resize", update);
+  window.addEventListener("load", update);
+  update();
+})();
