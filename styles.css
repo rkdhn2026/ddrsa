@@ -245,3 +245,8 @@ dl.contact dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 /* Facebook Page Plugin */
 .fb-feed { display: grid; gap: 10px; justify-items: start; }
 .fb-feed iframe { width: 100%; max-width: 500px; height: 640px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+
+/* Office bearer cards with photo */
+.person { grid-template-columns: auto 1fr; align-items: center; gap: 16px; }
+.avatar { width: 96px; height: 96px; border-radius: 50%; overflow: hidden; display: grid; place-items: center; background: color-mix(in srgb, var(--lane) 14%, var(--surface)); color: var(--lane); font-family: var(--f-display); font-weight: 700; font-size: 2rem; border: 3px solid var(--lane); }
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
