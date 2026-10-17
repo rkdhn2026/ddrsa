@@ -37,7 +37,15 @@
       <li><a href="officials.html">Coaches &amp; Referees</a></li>
       <li><a href="news.html">News &amp; Gallery</a></li>
       <li><a href="contact.html">Contact</a></li>
-      <li class="cta"><a href="registration.html" aria-current="page">Register 2026-27</a></li>
+      <li class="cta has-sub">
+        <button type="button" class="sub-toggle" aria-expanded="false" aria-controls="reg-menu">Register 2026-27 <span aria-hidden="true">▾</span></button>
+        <ul class="sub" id="reg-menu" hidden>
+          <li><a href="registration.html#skater">Skater registration</a></li>
+          <li><a href="registration.html#coach">Coach registration</a></li>
+          <li><a href="registration.html#referee">Referee registration</a></li>
+          <li><a href="registration.html#portal">Skater login</a></li>
+        </ul>
+      </li>
       </ul>
     </nav>
   </div>
@@ -46,11 +54,15 @@
 <div class="wrap">
   <section class="page-head">
     <p class="eyebrow">Annual registration 2026-27</p>
-    <h1>Skater registration</h1>
-    <p class="lede">Registration is mandatory for every skater in club, district, state and national events. It is valid from 1 April 2026 to 31 March 2027.</p>
-    <nav class="subnav" aria-label="On this page"><a href="#steps">How it works</a><a href="#form">Register</a><a href="#portal">Skater login</a></nav>
+    <h1>Register for 2026-27</h1>
+    <p class="lede">Skaters, coaches and referees register with DDRSA every season. Registration is mandatory for club, district, state and national events and is valid from 1 April 2026 to 31 March 2027.</p>
+    <nav class="subnav" aria-label="On this page"><a href="#skater">Skater</a><a href="#coach">Coach</a><a href="#referee">Referee</a><a href="#portal">Skater login</a></nav>
   </section>
   <div class="lanes" aria-hidden="true"></div>
+
+  <section class="section tight" id="skater">
+    <div class="section-head"><p class="eyebrow">For skaters</p><h2>Skater registration</h2></div>
+  </section>
 
   <section class="section split" id="steps">
     <div class="stack">
@@ -95,6 +107,63 @@
       <p class="form-note">This form is a front-end only. It needs a database or form service before it can accept real registrations.</p>
       <p id="r-status" class="notice" role="status" hidden></p>
     </form>
+  </section>
+
+  <section class="section" id="coach">
+    <div class="section-head"><p class="eyebrow">For coaches</p><h2>Coach registration</h2></div>
+    <div class="split">
+      <div class="stack">
+        <h3>What you need</h3>
+        <ul class="checks">
+        <li>Coaching certificate or qualification, if you hold one</li>
+        <li>Government photo ID and a recent passport-size photo</li>
+        <li>First-aid certificate (needed for level 1 and above)</li>
+        <li>Name of the club where you coach</li>
+        </ul>
+      </div>
+      <form data-simple-form novalidate>
+        <div class="form-grid">
+          <div class="field"><label for="c-name">Full name</label><input id="c-name" autocomplete="name" required></div>
+          <div class="field"><label for="c-dob">Date of birth</label><input id="c-dob" type="date"></div>
+          <div class="field"><label for="c-level">Coaching level</label><select id="c-level"><option>No certificate yet</option><option>Level 1</option><option>Level 2</option><option>Level 3</option></select></div>
+          <div class="field"><label for="c-years">Years coaching</label><input id="c-years" inputmode="numeric"></div>
+          <div class="field"><label for="c-club">Club</label><input id="c-club"></div>
+          <div class="field"><label for="c-phone">Mobile number</label><input id="c-phone" inputmode="tel" required></div>
+          <div class="field"><label for="c-email">Email</label><input id="c-email" type="email"></div>
+        </div>
+        <button class="btn btn-primary" type="submit">Submit coach registration</button>
+        <p class="form-note">Front-end only for now. It needs a database or form service before it can accept real registrations.</p>
+        <p class="notice" role="status" hidden></p>
+      </form>
+    </div>
+  </section>
+
+  <section class="section" id="referee">
+    <div class="section-head"><p class="eyebrow">For referees and judges</p><h2>Referee registration</h2></div>
+    <div class="split">
+      <div class="stack">
+        <h3>What you need</h3>
+        <ul class="checks">
+        <li>Referee or judge certificate, if you hold one</li>
+        <li>Government photo ID and a recent passport-size photo</li>
+        <li>Attendance at a DDRSA referee clinic for first-time officials</li>
+        <li>Availability for district meets this season</li>
+        </ul>
+      </div>
+      <form data-simple-form novalidate>
+        <div class="form-grid">
+          <div class="field"><label for="f-name">Full name</label><input id="f-name" autocomplete="name" required></div>
+          <div class="field"><label for="f-dob">Date of birth</label><input id="f-dob" type="date"></div>
+          <div class="field"><label for="f-grade">Grade</label><select id="f-grade"><option>Aspirant</option><option>District</option><option>State</option><option>National</option></select></div>
+          <div class="field"><label for="f-years">Years officiating</label><input id="f-years" inputmode="numeric"></div>
+          <div class="field"><label for="f-phone">Mobile number</label><input id="f-phone" inputmode="tel" required></div>
+          <div class="field"><label for="f-email">Email</label><input id="f-email" type="email"></div>
+        </div>
+        <button class="btn btn-primary" type="submit">Submit referee registration</button>
+        <p class="form-note">Front-end only for now. It needs a database or form service before it can accept real registrations.</p>
+        <p class="notice" role="status" hidden></p>
+      </form>
+    </div>
   </section>
 
   <section class="section" id="portal">
@@ -144,7 +213,9 @@
     <div class="foot-cols">
       <div><img class="foot-logo" src="img/ddrsa-logo-96.png" alt="" width="72" height="72"><h3>DDRSA</h3><p>Dhanbad District Roller Skating Association, affiliated with the <a href="https://jharkhandskate.com/" target="_blank" rel="noopener">Roller Skating Association of Jharkhand</a> and <span class="ph">national federation</span>.</p></div>
       <div><h3>Skaters</h3><ul>
-        <li><a href="registration.html">Annual registration</a></li>
+        <li><a href="registration.html#skater">Skater registration</a></li>
+        <li><a href="registration.html#coach">Coach registration</a></li>
+        <li><a href="registration.html#referee">Referee registration</a></li>
         <li><a href="registration.html#portal">Skater login</a></li>
         <li><a href="championships.html#results">Results</a></li>
         <li><a href="championships.html#rankings">District rankings</a></li></ul></div>
@@ -161,5 +232,6 @@
     <div class="foot-bottom"><span>© 2026 DDRSA. All rights reserved.</span><span>Last updated 13 Oct 2026</span></div>
   </div>
 </footer>
+<script src="site.js"></script>
 </body>
 </html>
