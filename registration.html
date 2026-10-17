@@ -87,22 +87,23 @@
     <h2>Registration form</h2>
     <form id="reg-form" novalidate>
       <div class="form-grid">
-        <div class="field"><label for="r-name">Skater's full name</label><input id="r-name" required autocomplete="name"></div>
-        <div class="field"><label for="r-dob">Date of birth</label><input id="r-dob" type="date" required></div>
-        <div class="field"><label for="r-gender">Gender</label><select id="r-gender"><option>Girl</option><option>Boy</option></select></div>
-        <div class="field"><label for="r-skate">Skate type</label><select id="r-skate"><option>Beginner</option><option>Quad</option><option selected>Inline</option></select></div>
-        <div class="field"><label for="r-club">Club</label><select id="r-club"><option>Club name (to fill in)</option><option>Independent</option></select></div>
-        <div class="field"><label for="r-parent">Parent / guardian</label><input id="r-parent"></div>
-        <div class="field"><label for="r-phone">Mobile number</label><input id="r-phone" inputmode="tel" required></div>
-        <div class="field"><label for="r-email">Email</label><input id="r-email" type="email"></div>
+        <div class="field"><label for="r-name">Skater's full name</label><input id="r-name" name="name" required autocomplete="name"></div>
+        <div class="field"><label for="r-dob">Date of birth</label><input id="r-dob" name="dob" type="date" required></div>
+        <div class="field"><label for="r-gender">Gender</label><select id="r-gender" name="gender"><option>Girl</option><option>Boy</option></select></div>
+        <div class="field"><label for="r-skate">Skate type</label><select id="r-skate" name="skate"><option>Beginner</option><option>Quad</option><option selected>Inline</option></select></div>
+        <div class="field"><label for="r-club">Club</label><select id="r-club" name="club"><option>Dhanbad Skating Academy</option><option>Black Diamond</option><option>Independent</option></select></div>
+        <div class="field"><label for="r-parent">Parent / guardian</label><input id="r-parent" name="parent"></div>
+        <div class="field"><label for="r-phone">Mobile number</label><input id="r-phone" name="phone" inputmode="tel" required></div>
+        <div class="field"><label for="r-email">Email</label><input id="r-email" name="email" type="email"></div>
       </div>
+      <div class="hp" aria-hidden="true"><label for="r-website">Leave this empty</label><input id="r-website" name="website" tabindex="-1" autocomplete="off"></div>
       <div class="result-box" aria-live="polite">
         <span class="eyebrow">Race category for 2026-27</span>
         <strong id="r-cat">Enter a date of birth</strong>
         <span class="form-note" id="r-cat-note">Age counted as on 1 January 2027. Check the bands against the federation's current rules.</span>
       </div>
       <button class="btn btn-primary" type="submit">Submit registration</button>
-      <p class="form-note">This form is a front-end only. It needs a database or form service before it can accept real registrations.</p>
+      <p class="form-note">Your registration is checked by DDRSA before it is approved. Once approved, the skater's name, discipline, age group and club are shown on the <a href="skaters.html">Skaters list</a>. Date of birth, phone and email are never shown. By submitting you agree to this.</p>
       <p id="r-status" class="notice" role="status" hidden></p>
     </form>
   </section>
@@ -137,6 +138,7 @@
   </section>
 </div>
 </main>
+<script src="site-config.js"></script>
 <script>
 (function () {
   // Age bands: [max age, label]. Edit to match the federation's rules.
@@ -164,7 +166,19 @@
     var missing = [].filter.call(this.querySelectorAll("[required]"), function (el) { return !el.value.trim(); });
     s.hidden = false;
     if (missing.length) { s.textContent = "Please fill in the skater's name, date of birth and a mobile number."; missing[0].focus(); return; }
-    s.textContent = "Form complete. Registrations are not saved yet, so please also register through your club.";
+    var api = window.DDRSA_API;
+    if (!api) { s.textContent = "Form complete. Registrations are not saved yet, so please also register through your club."; return; }
+    var btn = this.querySelector("button[type=submit]"), form = this, data = {};
+    [].forEach.call(form.querySelectorAll("[name]"), function (el) { data[el.name] = el.value; });
+    btn.disabled = true;
+    s.textContent = "Sending...";
+    fetch(api, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) })
+      .then(function () {
+        s.textContent = "Thank you. Your registration has been received and will be checked by DDRSA. Please also bring your documents to your club.";
+        form.reset(); update();
+      })
+      .catch(function () { s.textContent = "Could not send the registration. Please check your connection and try again."; })
+      .then(function () { btn.disabled = false; });
   });
 })();
 </script>

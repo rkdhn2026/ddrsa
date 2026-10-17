@@ -315,3 +315,4 @@ dl.contact dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .chip small { font-size: inherit; color: var(--muted); }
 .chip[aria-pressed="true"] { background: var(--lane); border-color: var(--lane); color: #fff; }
 .chip[aria-pressed="true"] small { color: #fff; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
