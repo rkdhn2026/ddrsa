@@ -14,6 +14,8 @@
 var SHEET_NAME = "Registrations";
 var HEADERS = ["Timestamp", "Status", "Name", "Discipline", "Age group", "Club",
                "Date of birth", "Gender", "Parent or guardian", "Mobile", "Email", "Skate type submitted"];
+// Age is counted on 31 December of this year. Change it each season.
+var COMPETITION_YEAR = 2026;
 var GROUPS = ["toddlers", "cadet-6-8", "cadet-10-12", "sub-junior", "junior", "senior"];
 
 function getSheet_() {
@@ -33,12 +35,12 @@ function clean_(value, max) {
   return /^[=+\-@]/.test(s) ? "'" + s : s;
 }
 
-// Suggested age group from date of birth, age counted on 1 January 2027.
+// Suggested age group from date of birth, age counted on 31 December of COMPETITION_YEAR.
 // This is only a suggestion; whoever approves the row can change it.
 function suggestGroup_(dob) {
   var d = new Date(dob + "T00:00:00");
   if (isNaN(d.getTime())) return "";
-  var ref = new Date(2027, 0, 1);
+  var ref = new Date(COMPETITION_YEAR, 11, 31);
   var age = ref.getFullYear() - d.getFullYear();
   if (ref.getMonth() < d.getMonth() || (ref.getMonth() === d.getMonth() && ref.getDate() < d.getDate())) age--;
   if (age < 6) return "toddlers";

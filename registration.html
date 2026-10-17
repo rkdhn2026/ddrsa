@@ -100,7 +100,7 @@
       <div class="result-box" aria-live="polite">
         <span class="eyebrow">Race category for 2026-27</span>
         <strong id="r-cat">Enter a date of birth</strong>
-        <span class="form-note" id="r-cat-note">Age counted as on 1 January 2027. Check the bands against the federation's current rules.</span>
+        <span class="form-note" id="r-cat-note">Age counted as on 31 December of the competition year.</span>
       </div>
       <button class="btn btn-primary" type="submit">Submit registration</button>
       <p class="form-note">Your registration is checked by DDRSA before it is approved. Once approved, the skater's name, discipline, age group and club are shown on the <a href="skaters.html">Skaters list</a>. Date of birth, phone and email are never shown. By submitting you agree to this.</p>
@@ -143,7 +143,8 @@
 (function () {
   // Age bands: [max age, label]. Edit to match the federation's rules.
   var BANDS = [[5, "Under 6"], [7, "6–8 years"], [9, "8–10 years"], [11, "10–12 years"], [13, "12–14 years"], [15, "14–16 years"], [29, "Above 16 (Senior)"], [200, "Masters 30+"]];
-  var REF = new Date(2027, 0, 1);
+  var YEAR = window.DDRSA_COMPETITION_YEAR || 2026;
+  var REF = new Date(YEAR, 11, 31);
   var dob = document.getElementById("r-dob"), skate = document.getElementById("r-skate"), gender = document.getElementById("r-gender");
   var out = document.getElementById("r-cat"), note = document.getElementById("r-cat-note");
   function ageOn(d) {
@@ -154,10 +155,10 @@
   function update() {
     if (!dob.value) { out.textContent = "Enter a date of birth"; return; }
     var a = ageOn(new Date(dob.value + "T00:00:00"));
-    if (a < 3) { out.textContent = "Too young to register"; note.textContent = "Skaters must be at least 3 on 1 January 2027."; return; }
+    if (a < 3) { out.textContent = "Too young to register"; note.textContent = "Skaters must be at least 3 on 31 December " + YEAR + "."; return; }
     var band = BANDS.find(function (b) { return a <= b[0]; })[1];
     out.textContent = skate.value + " · " + band + " · " + gender.value + "s";
-    note.textContent = "Age " + a + " on 1 January 2027.";
+    note.textContent = "Age " + a + " on 31 December " + YEAR + ".";
   }
   [dob, skate, gender].forEach(function (el) { el.addEventListener("input", update); el.addEventListener("change", update); });
   document.getElementById("reg-form").addEventListener("submit", function (e) {
