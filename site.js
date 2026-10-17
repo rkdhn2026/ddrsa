@@ -17,11 +17,11 @@
       if (e.key === "Escape" && !menu.hidden) { setOpen(false); toggle.focus(); }
     });
   }
-  // Coach and referee forms (front-end only)
+  // Coach registration form: sent to the DDRSA Google Apps Script (see setup/skater-sheet-setup.md)
   document.querySelectorAll("[data-simple-form]").forEach(function (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      var status = form.querySelector(".notice");
+      var status = form.querySelector(".notice"), btn = form.querySelector("button[type=submit]");
       var missing = [].filter.call(form.querySelectorAll("[required]"), function (el) { return !el.value.trim(); });
       status.hidden = false;
       if (missing.length) {
@@ -29,7 +29,14 @@
         missing[0].focus();
         return;
       }
-      status.textContent = "Form complete. Registrations are not saved yet, so please also register through your club or the office.";
+      if (!window.DDRSA_API) { status.textContent = "Registrations cannot be sent from this page right now. Please email rollerskatingdhanbad@gmail.com."; return; }
+      var data = { form: form.getAttribute("data-simple-form"), website: form.elements.website ? form.elements.website.value : "" };
+      form.querySelectorAll("input[id], select[id]").forEach(function (el) { if (el.name !== "website") data[el.id.replace(/^c-/, "")] = el.value; });
+      btn.disabled = true; status.textContent = "Sending...";
+      fetch(window.DDRSA_API, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) })
+        .then(function () { status.textContent = "Thank you. Your coach registration has been received and will be checked by DDRSA."; form.reset(); })
+        .catch(function () { status.textContent = "Could not send the registration. Please check your connection and try again."; })
+        .then(function () { btn.disabled = false; });
     });
   });
   // Photo albums: show/hide grid and lightbox viewer

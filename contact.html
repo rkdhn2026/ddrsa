@@ -72,13 +72,14 @@
     <div class="stack">
       <h2>Send a message</h2>
       <form id="contact-form" novalidate>
+        <div class="hp" aria-hidden="true"><label for="c-website">Leave this empty</label><input id="c-website" name="website" tabindex="-1" autocomplete="off"></div>
         <div class="field"><label for="c-name">Your name</label><input id="c-name" required autocomplete="name"></div>
         <div class="field"><label for="c-phone">Phone or email</label><input id="c-phone" required></div>
         <div class="field"><label for="c-topic">About</label>
           <select id="c-topic"><option>Skater registration</option><option>Championships and entries</option><option>Club affiliation</option><option>Coach or referee courses</option><option>Something else</option></select></div>
         <div class="field"><label for="c-msg">Message</label><textarea id="c-msg" required></textarea></div>
         <button class="btn btn-primary" type="submit">Send message</button>
-        <p class="form-note">This form is not connected to an inbox yet.</p>
+        <p class="form-note">Messages go to the DDRSA office at rollerskatingdhanbad@gmail.com.</p>
         <p id="c-status" class="notice" role="status" hidden></p>
       </form>
     </div>
@@ -89,14 +90,21 @@
   </section>
 </div>
 </main>
+<script src="site-config.js"></script>
 <script>
 document.getElementById("contact-form").addEventListener("submit", function (e) {
   e.preventDefault();
-  var s = document.getElementById("c-status");
-  var missing = [].filter.call(this.querySelectorAll("[required]"), function (el) { return !el.value.trim(); });
+  var form = this, s = document.getElementById("c-status"), btn = form.querySelector("button[type=submit]");
+  var missing = [].filter.call(form.querySelectorAll("[required]"), function (el) { return !el.value.trim(); });
   s.hidden = false;
   if (missing.length) { s.textContent = "Please fill in your name, a way to reach you, and a message."; missing[0].focus(); return; }
-  s.textContent = "Thanks. This form is not connected yet, so please call or email the office directly.";
+  if (!window.DDRSA_API) { s.textContent = "Messages cannot be sent from this page right now. Please email rollerskatingdhanbad@gmail.com."; return; }
+  var data = { form: "contact", name: form["c-name"].value, contact: form["c-phone"].value, topic: form["c-topic"].value, message: form["c-msg"].value, website: form.website.value };
+  btn.disabled = true; s.textContent = "Sending...";
+  fetch(window.DDRSA_API, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) })
+    .then(function () { s.textContent = "Thank you. Your message has been sent to the DDRSA office."; form.reset(); })
+    .catch(function () { s.textContent = "Could not send the message. Please check your connection, or email rollerskatingdhanbad@gmail.com."; })
+    .then(function () { btn.disabled = false; });
 });
 </script>
 <footer class="site-foot">

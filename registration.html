@@ -129,7 +129,8 @@
         <li>Name of the club where you coach</li>
         </ul>
       </div>
-      <form data-simple-form novalidate>
+      <form data-simple-form="coach" novalidate>
+        <div class="hp" aria-hidden="true"><label for="c-website">Leave this empty</label><input id="c-website" name="website" tabindex="-1" autocomplete="off"></div>
         <div class="form-grid">
           <div class="field"><label for="c-name">Full name</label><input id="c-name" autocomplete="name" required></div>
           <div class="field"><label for="c-dob">Date of birth</label><input id="c-dob" type="date"></div>
@@ -140,7 +141,7 @@
           <div class="field"><label for="c-email">Email</label><input id="c-email" type="email"></div>
         </div>
         <button class="btn btn-primary" type="submit">Submit coach registration</button>
-        <p class="form-note">Front-end only for now. It needs a database or form service before it can accept real registrations.</p>
+        <p class="form-note">Your registration is checked by DDRSA. Bring your documents to the office or your club.</p>
         <p class="notice" role="status" hidden></p>
       </form>
     </div>

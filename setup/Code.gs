@@ -107,6 +107,8 @@ function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
     if (data.website) return json_({ ok: true });            // honeypot: bots fill this in
+    if (data.form === "contact") return contact_(data);
+    if (data.form === "coach") return coach_(data);
     var name = clean_(data.name, 100), phone = clean_(data.phone, 20);
     var parent = clean_(data.parent, 100), aadhaar = String(data.aadhaar || "").replace(/\s/g, "");
     if (!name || !phone || !parent || !data.dob || !data.gender) return json_({ ok: false, error: "Required details are missing." });
@@ -201,6 +203,54 @@ function news_() {
   var out = JSON.stringify({ ok: true, items: items });
   if (items.length) cache.put("news", out, 10800);   // keep for 3 hours
   return ContentService.createTextOutput(out).setMimeType(ContentService.MimeType.JSON);
+}
+
+// ---- Contact page messages and coach registrations: saved in their own tabs and emailed to the office ----
+var NOTIFY_TO = "rollerskatingdhanbad@gmail.com";
+
+function appendTo_(tabName, headers, values) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(tabName);
+  if (!sheet) { sheet = ss.insertSheet(tabName); sheet.appendRow(headers); sheet.setFrozenRows(1); }
+  sheet.appendRow(values);
+}
+
+// At most 30 emails an hour, so a flood of junk cannot use up the daily Gmail limit. Rows are always saved.
+function mayEmail_() {
+  var cache = CacheService.getScriptCache();
+  var n = Number(cache.get("mailCount") || 0);
+  if (n >= 30) return false;
+  cache.put("mailCount", String(n + 1), 3600);
+  return true;
+}
+
+function notify_(subject, lines, replyTo) {
+  if (!mayEmail_()) return;
+  var opts = { to: NOTIFY_TO, subject: subject, body: lines.join("\n") };
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(replyTo || "")) opts.replyTo = replyTo;
+  MailApp.sendEmail(opts);
+}
+
+function contact_(data) {
+  var name = clean_(data.name, 100), reach = clean_(data.contact, 150);
+  var topic = clean_(data.topic, 80), message = clean_(data.message, 2000);
+  if (!name || !reach || !message) return json_({ ok: false, error: "Required details are missing." });
+  appendTo_("Messages", ["Timestamp", "Name", "Phone or email", "About", "Message"], [new Date(), name, reach, topic, message]);
+  notify_("DDRSA website message: " + (topic || "Message"),
+    ["From: " + name, "Phone or email: " + reach, "About: " + topic, "", message], reach);
+  return json_({ ok: true });
+}
+
+function coach_(data) {
+  var name = clean_(data.name, 100), phone = clean_(data.phone, 20);
+  if (!name || !phone) return json_({ ok: false, error: "Required details are missing." });
+  var row = [new Date(), name, clean_(data.dob, 10), clean_(data.level, 40), clean_(data.years, 10),
+             clean_(data.club, 100), phone, clean_(data.email, 100)];
+  appendTo_("Coach registrations", ["Timestamp", "Name", "Date of birth", "Coaching level", "Years coaching", "Club", "Mobile", "Email"], row);
+  notify_("DDRSA coach registration: " + name,
+    ["Name: " + name, "Date of birth: " + row[2], "Coaching level: " + row[3], "Years coaching: " + row[4],
+     "Club: " + row[5], "Mobile: " + phone, "Email: " + row[7]], row[7]);
+  return json_({ ok: true });
 }
 
 function json_(obj) {
