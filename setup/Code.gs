@@ -133,7 +133,8 @@ function doPost(e) {
   }
 }
 
-function doGet() {
+function doGet(e) {
+  if (e && e.parameter && e.parameter.feed === "news") return news_();
   var rows = getSheet_().getDataRange().getValues();
   var head = rows.shift();
   var col = function (n) { return head.indexOf(n); };
@@ -161,6 +162,45 @@ function doGet() {
     skaters.push(s);
   });
   return json_({ ok: true, skaters: skaters });
+}
+
+// Latest posts from other skating sites, for the home page. Only title, link, date and a short excerpt.
+var NEWS_SOURCES = [
+  { site: "indiaskate.com", url: "https://indiaskate.com/feed/" },
+  { site: "jharkhandskate.com", url: "https://jharkhandskate.com/feed/" }
+];
+
+function plain_(html, max) {
+  var t = String(html || "").replace(/<[^>]*>/g, " ").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&")
+    .replace(/&#8217;|&rsquo;/g, "'").replace(/&#8211;|&ndash;/g, "-").replace(/&hellip;|\[&#8230;\]|\[…\]/g, "")
+    .replace(/&[#\w]+;/g, " ").replace(/\s+/g, " ").trim();
+  return t.length > max ? t.substring(0, max).replace(/\s+\S*$/, "") + "..." : t;
+}
+
+function news_() {
+  var cache = CacheService.getScriptCache();
+  var hit = cache.get("news");
+  if (hit) return ContentService.createTextOutput(hit).setMimeType(ContentService.MimeType.JSON);
+  var items = [];
+  NEWS_SOURCES.forEach(function (src) {
+    try {
+      var res = UrlFetchApp.fetch(src.url, { muteHttpExceptions: true, followRedirects: true });
+      if (res.getResponseCode() !== 200) return;
+      var channel = XmlService.parse(res.getContentText()).getRootElement().getChild("channel");
+      channel.getChildren("item").slice(0, 4).forEach(function (it) {
+        var link = it.getChildText("link") || "";
+        if (!/^https:\/\//i.test(link)) return;
+        var d = new Date(it.getChildText("pubDate"));
+        items.push({
+          source: src.site, title: plain_(it.getChildText("title"), 140), link: link,
+          date: isNaN(d.getTime()) ? "" : d.toISOString(), excerpt: plain_(it.getChildText("description"), 160)
+        });
+      });
+    } catch (err) {}
+  });
+  var out = JSON.stringify({ ok: true, items: items });
+  if (items.length) cache.put("news", out, 10800);   // keep for 3 hours
+  return ContentService.createTextOutput(out).setMimeType(ContentService.MimeType.JSON);
 }
 
 function json_(obj) {

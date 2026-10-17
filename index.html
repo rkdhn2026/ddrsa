@@ -228,39 +228,39 @@
 
   <section class="section" id="national-news">
     <div class="section-head"><p class="eyebrow">Latest updates · National and state</p><h2>Skating news from India and Jharkhand</h2></div>
-    <div class="grid">
-      <article class="card">
+    <div class="grid" id="national-grid">
+      <article class="card" data-src="indiaskate.com">
         <span class="meta">National · indiaskate.com</span>
         <h3>World Skate Games 2026: medals for the girls' relay and a big win for Velu Anand Kumar</h3>
         <p>India's girls' relay team and Velu Anand Kumar are among the medal and win highlights from Paraguay, and the inline freestyle team is back safely.</p>
         <a href="https://indiaskate.com/world-skate-games-2026-historic-medals-for-girls-relay-and-velu-anand-kumar-massive-victory-against-host-nation-paraguay-and-safe-return-of-inline-freestyle-team/" target="_blank" rel="noopener">Read on indiaskate.com →</a>
       </article>
-      <article class="card">
+      <article class="card" data-src="indiaskate.com">
         <span class="meta">National · indiaskate.com</span>
         <h3>World Skate Games 2026: bronze in speed skating</h3>
         <p>Indian speed skaters won a bronze medal, and the roller hockey team returned safely.</p>
         <a href="https://indiaskate.com/world-skate-games-2026-bronze-medal-victory-in-speed-skating-roller-hockey-team-safe-return/" target="_blank" rel="noopener">Read on indiaskate.com →</a>
       </article>
-      <article class="card">
+      <article class="card" data-src="indiaskate.com">
         <span class="meta">National · indiaskate.com</span>
         <h3>World Skate Games 2026: inline slalom final results</h3>
         <p>Inline slalom final results, with weather delays and team updates from Paraguay.</p>
         <a href="https://indiaskate.com/fwd-world-skate-games-2026-inline-slalom-final-results-weather-delays-and-team-updates/" target="_blank" rel="noopener">Read on indiaskate.com →</a>
       </article>
-      <article class="card">
+      <article class="card" data-src="indiaskate.com">
         <span class="meta">National · indiaskate.com</span>
         <h3>Preparations for the 64th National Roller Skating Championship</h3>
         <p>An update on preparations for the 64th National Championship, with venue details to be announced.</p>
         <a href="https://indiaskate.com/preparations-for-the-64th-national-roller-skating-championship-venue-details-announcement/" target="_blank" rel="noopener">Read on indiaskate.com →</a>
       </article>
-      <article class="card">
+      <article class="card" data-src="jharkhandskate.com">
         <span class="meta">State · jharkhandskate.com</span>
         <h3>Roller Skating Association of Jharkhand</h3>
         <p>Notices and updates from the state association are published on its website.</p>
         <a href="https://jharkhandskate.com/" target="_blank" rel="noopener">Visit jharkhandskate.com →</a>
       </article>
     </div>
-    <p class="notice">Short summaries written by DDRSA. All news belongs to the sites linked.</p>
+    <p class="notice">Headlines come from the sites linked and belong to them. Each link opens the original article.</p>
   </section>
 
   <section class="section split">
@@ -327,6 +327,34 @@
     <div class="foot-bottom"><span>© 2026 DDRSA. All rights reserved.</span><span>Last updated 13 Oct 2026</span></div>
   </div>
 </footer>
+<script src="site-config.js"></script>
+<script>
+// Replaces the fixed cards with the latest posts when the feed loads; the fixed cards stay if it does not.
+(function () {
+  var grid = document.getElementById("national-grid");
+  if (!window.DDRSA_API || !grid) return;
+  fetch(window.DDRSA_API + "?feed=news").then(function (r) { return r.json(); }).then(function (d) {
+    var items = (d.items || []).filter(function (i) { return i.title && /^https:\/\//i.test(i.link); });
+    ["indiaskate.com", "jharkhandskate.com"].forEach(function (site) {
+      var mine = items.filter(function (i) { return i.source === site; }).slice(0, site === "indiaskate.com" ? 4 : 2);
+      if (!mine.length) return;
+      grid.querySelectorAll('[data-src="' + site + '"]').forEach(function (c) { c.remove(); });
+      mine.forEach(function (i) {
+        var c = document.createElement("article"); c.className = "card"; c.setAttribute("data-src", site);
+        var m = document.createElement("span"); m.className = "meta";
+        var when = i.date ? new Date(i.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) + " · " : "";
+        m.textContent = when + site;
+        var t = document.createElement("h3"); t.textContent = i.title;
+        var p = document.createElement("p"); p.textContent = i.excerpt || "";
+        var a = document.createElement("a"); a.href = i.link; a.target = "_blank"; a.rel = "noopener"; a.textContent = "Read on " + site + " →";
+        c.appendChild(m); c.appendChild(t); if (i.excerpt) c.appendChild(p); c.appendChild(a);
+        grid.appendChild(c);
+      });
+    });
+    grid.querySelectorAll('[data-src="jharkhandskate.com"]').forEach(function (c) { grid.appendChild(c); });
+  }).catch(function () {});
+})();
+</script>
 <script src="site.js"></script>
 </body>
 </html>
