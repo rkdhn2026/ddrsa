@@ -233,7 +233,7 @@ dl.contact dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .ribbon-viewport { flex: 1; min-width: 0; overflow: hidden; display: flex; align-items: center; }
 .ribbon-track { display: flex; width: max-content; animation: ribbon 45s linear infinite; }
 .ribbon:hover .ribbon-track, .ribbon:focus-within .ribbon-track { animation-play-state: paused; }
-.ribbon-track ul { display: flex; list-style: none; margin: 0; padding: 0; }
+.ribbon-track ul { display: flex; list-style: none; margin: 0; padding: 0; min-width: 100vw; justify-content: space-around; }
 .ribbon-track li { white-space: nowrap; padding: 8px 28px; position: relative; }
 .ribbon-track li::before { content: ""; position: absolute; left: 8px; top: 50%; width: 10px; height: 3px; background: var(--lane); transform: skewX(-20deg); }
 .ribbon-track a { color: var(--ink); text-decoration: none; }
