@@ -265,4 +265,5 @@ dl.contact dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 /* Hero slide: track graphic top-left, headline beneath */
 .slide-hero { grid-template-columns: 1fr; justify-items: start; align-content: start; gap: 12px; }
 @media (min-width: 900px) { .slide-hero { grid-template-columns: 1fr; align-items: start; } }
-.slide-hero .track-art { width: min(100%, 360px); }
+.slide-hero .track-art { width: min(100%, 640px); margin: -12px 0 0 -12px; }
+.slide-hero .track-art text { font-size: 16px; }
