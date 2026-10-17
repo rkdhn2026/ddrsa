@@ -286,3 +286,6 @@ dl.contact dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .card-img.photo43, .slide-photo.photo43 { aspect-ratio: 4 / 3; }
 .slide-photo.photo43 { max-width: 380px; }
 .card-img.wide, .slide-photo.wide { object-position: center top; }
+.photo-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.photo-row img { width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; object-position: center top; border-radius: 8px; }
+.slide-row { width: 100%; max-width: 520px; justify-self: center; }
