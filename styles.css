@@ -285,3 +285,4 @@ dl.contact dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .slide-photo.wide { max-width: 420px; }
 .card-img.photo43, .slide-photo.photo43 { aspect-ratio: 4 / 3; }
 .slide-photo.photo43 { max-width: 380px; }
+.card-img.wide, .slide-photo.wide { object-position: center top; }
