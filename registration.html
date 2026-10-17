@@ -95,7 +95,7 @@
         <div class="field"><label for="r-parent">Parent / guardian name</label><input id="r-parent" name="parent" required></div>
         <div class="field"><label for="r-phone">Mobile number</label><input id="r-phone" name="phone" inputmode="tel" required></div>
         <div class="field"><label for="r-email">Email (optional)</label><input id="r-email" name="email" type="email"></div>
-        <div class="field wide"><label for="r-aadhaar">Aadhaar number (12 digits)</label><input id="r-aadhaar" name="aadhaar" inputmode="numeric" maxlength="14" autocomplete="off" required>
+        <div class="field wide"><label for="r-aadhaar">Aadhaar number (optional, 12 digits)</label><input id="r-aadhaar" name="aadhaar" inputmode="numeric" maxlength="14" autocomplete="off">
           <span class="form-note">Used only by DDRSA to verify the skater's identity and age. It is kept privately and is never shown on the website.</span></div>
       </div>
       <h3 class="form-sub">Optional: for the skater's profile</h3>
@@ -175,7 +175,7 @@
     s.hidden = false;
     var aad = document.getElementById("r-aadhaar");
     if (aad.value.trim() && !/^\d{12}$/.test(aad.value.replace(/\s/g, ""))) { s.textContent = "The Aadhaar number must be 12 digits."; aad.focus(); return; }
-    if (missing.length) { s.textContent = "Please fill in the skater's name, date of birth, Aadhaar number, parent name and mobile number, and tick the agreement box."; missing[0].focus(); return; }
+    if (missing.length) { s.textContent = "Please fill in the skater's name, date of birth, parent name and mobile number, and tick the agreement box."; missing[0].focus(); return; }
     var api = window.DDRSA_API;
     if (!api) { s.textContent = "Form complete. Registrations are not saved yet, so please also register through your club."; return; }
     var btn = this.querySelector("button[type=submit]"), form = this, data = {};

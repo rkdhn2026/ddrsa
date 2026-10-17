@@ -109,7 +109,7 @@ function doPost(e) {
     var name = clean_(data.name, 100), phone = clean_(data.phone, 20);
     var parent = clean_(data.parent, 100), aadhaar = String(data.aadhaar || "").replace(/\s/g, "");
     if (!name || !phone || !parent || !data.dob || !data.gender) return json_({ ok: false, error: "Required details are missing." });
-    if (!/^\d{12}$/.test(aadhaar)) return json_({ ok: false, error: "Aadhaar number must be 12 digits." });
+    if (aadhaar && !/^\d{12}$/.test(aadhaar)) return json_({ ok: false, error: "Aadhaar number must be 12 digits." });
     var skate = clean_(data.skate, 20);
     var discipline = skate === "Inline" || skate === "Quad" ? skate : "";
     var skaterId = nextId_();
@@ -121,7 +121,7 @@ function doPost(e) {
       "Skate type submitted": skate, "Instagram": clean_(data.instagram, 150), "Facebook": clean_(data.facebook, 200),
       "Photo (Drive link)": savePhoto_(skaterId, data.photoFile), "Titles and achievements": clean_(data.titles, 1000),
       "Agreed to public list": data.agreeList ? "Yes" : "No", "Show on public profile": data.agreeProfile ? "Yes" : "No",
-      "Aadhaar number": "'" + aadhaar
+      "Aadhaar number": aadhaar ? "'" + aadhaar : ""
     };
     getSheet_().appendRow(HEADERS.map(function (h) { return row[h]; }));
     return json_({ ok: true });
