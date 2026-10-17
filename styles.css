@@ -281,3 +281,5 @@ dl.contact dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .section.split h3 { margin-bottom: 4px; }
 .card-img { width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; border-radius: var(--radius); }
 .slide-photo { width: 100%; max-width: 280px; height: auto; aspect-ratio: 1 / 1; object-fit: cover; border-radius: var(--radius); justify-self: center; }
+.card-img.wide, .slide-photo.wide { aspect-ratio: 16 / 9; }
+.slide-photo.wide { max-width: 420px; }
