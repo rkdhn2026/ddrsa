@@ -60,6 +60,7 @@
 </section>
 
 <div class="wrap">
+  <div class="hero-grid">
   <section class="slider" aria-roledescription="carousel" aria-label="Highlights">
     <div class="slide slide-hero" data-slide>
       <svg class="track-art" viewBox="0 0 480 280" role="img" aria-label="A 200 metre skating track">
@@ -108,6 +109,11 @@
       <button class="dot" type="button" aria-label="Slide 4"></button>
     </div>
   </section>
+  <aside class="updates" id="ddrsa-updates" aria-label="Latest updates from DDRSA" hidden>
+    <h2 class="updates-title">Latest from DDRSA</h2>
+    <div class="updates-view"><div class="updates-track" id="updates-track"></div></div>
+  </aside>
+  </div>
 
   <section class="section disciplines" id="disciplines">
     <div class="section-head center"><p class="eyebrow">What we play</p><h2>Skating disciplines</h2>
@@ -151,7 +157,7 @@
     <div><span class="eyebrow">State medals 2025-26</span><span class="num"><span class="ph">57</span></span></div>
   </div>
 
-  <section class="section">
+  <section class="section" id="ddrsa-news">
     <div class="section-head"><p class="eyebrow">Latest updates · DDRSA</p><h2>DDRSA news</h2></div>
     <div class="grid">
       <article class="card">
@@ -344,6 +350,31 @@
     });
     grid.querySelectorAll('[data-src="jharkhandskate.com"]').forEach(function (c) { grid.appendChild(c); });
   }).catch(function () {});
+})();
+</script>
+<script>
+// Builds the "Latest from DDRSA" panel from the DDRSA news cards (same items, newest first).
+(function () {
+  var cards = document.querySelectorAll("#ddrsa-news .card");
+  var panel = document.getElementById("ddrsa-updates"), track = document.getElementById("updates-track");
+  if (!cards.length || !panel) return;
+  function list(hidden) {
+    var ul = document.createElement("ul"); if (hidden) ul.setAttribute("aria-hidden", "true");
+    cards.forEach(function (c, n) {
+      if (!c.id) c.id = "news-" + (n + 1);
+      var h3 = c.querySelector("h3"), meta = c.querySelector(".meta");
+      if (!h3) return;
+      var li = document.createElement("li"), a = document.createElement("a");
+      a.href = "#" + c.id; if (hidden) a.tabIndex = -1;
+      var m = document.createElement("span"); m.textContent = meta ? meta.textContent : "";
+      var t = document.createElement("strong"); t.textContent = h3.textContent;
+      a.appendChild(m); a.appendChild(t); li.appendChild(a); ul.appendChild(li);
+      a.addEventListener("click", function () { document.querySelectorAll(".more[hidden]").forEach(function (el) { el.hidden = false; }); var lm = document.getElementById("load-more"); if (lm) lm.hidden = true; });
+    });
+    return ul;
+  }
+  track.appendChild(list(false)); track.appendChild(list(true));
+  panel.hidden = false;
 })();
 </script>
 <script src="site.js"></script>
