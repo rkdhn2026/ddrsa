@@ -102,7 +102,7 @@
       <div class="form-grid">
         <div class="field"><label for="r-insta">Instagram, link or @name (optional)</label><input id="r-insta" name="instagram" autocomplete="off"></div>
         <div class="field"><label for="r-fb">Facebook page link (optional)</label><input id="r-fb" name="facebook" inputmode="url" autocomplete="off"></div>
-        <div class="field wide"><label for="r-photo">Photo of the skater (optional)</label><input id="r-photo" name="photofile" type="file" accept="image/*">
+        <div class="field wide"><label for="r-photo">Photo of the skater (required)</label><input id="r-photo" name="photofile" type="file" accept="image/*" required>
           <span class="form-note">Choose a photo from your phone or computer. It is shrunk automatically and sent with the form. It is only shown on the public profile if you tick the profile box below.</span></div>
         <div class="field wide"><label for="r-titles">Major titles and achievements (optional)</label><textarea id="r-titles" name="titles" rows="3" maxlength="1000"></textarea></div>
       </div>
@@ -175,7 +175,7 @@
     s.hidden = false;
     var aad = document.getElementById("r-aadhaar");
     if (aad.value.trim() && !/^\d{12}$/.test(aad.value.replace(/\s/g, ""))) { s.textContent = "The Aadhaar number must be 12 digits."; aad.focus(); return; }
-    if (missing.length) { s.textContent = "Please fill in the skater's name, date of birth, parent name and mobile number, and tick the agreement box."; missing[0].focus(); return; }
+    if (missing.length) { s.textContent = "Please fill in the skater's name, date of birth, photo, parent name and mobile number, and tick the agreement box."; missing[0].focus(); return; }
     var api = window.DDRSA_API;
     if (!api) { s.textContent = "Form complete. Registrations are not saved yet, so please also register through your club."; return; }
     var btn = this.querySelector("button[type=submit]"), form = this, data = {};
