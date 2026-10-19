@@ -10,8 +10,8 @@
  *   "Show on public profile" = Yes (the parent or skater ticked the consent box).
  *   Date of birth, phone, email, parent details and the Aadhaar number are never sent out.
  *
- * To approve a skater: open the sheet and change Status from Pending to Approved
- * (check Discipline and Age group first, you can edit them).
+ * To approve a skater: either use the web page admin.html (password = Script property ADMIN_PASSWORD),
+ * or open the sheet and change Status from Pending to Approved (check Discipline and Age group first).
  */
 
 var SHEET_NAME = "Registrations";
@@ -109,6 +109,7 @@ function doPost(e) {
     if (data.website) return json_({ ok: true });            // honeypot: bots fill this in
     if (data.form === "contact") return contact_(data);
     if (data.form === "coach") return coach_(data);
+    if (data.form === "admin") return admin_(data);
     var name = clean_(data.name, 100), phone = clean_(data.phone, 20);
     var parent = clean_(data.parent, 100), aadhaar = String(data.aadhaar || "").replace(/\s/g, "");
     if (!name || !phone || !parent || !data.dob || !data.gender) return json_({ ok: false, error: "Required details are missing." });
@@ -251,6 +252,84 @@ function coach_(data) {
     ["Name: " + name, "Date of birth: " + row[2], "Coaching level: " + row[3], "Years coaching: " + row[4],
      "Club: " + row[5], "Mobile: " + phone, "Email: " + row[7]], row[7]);
   return json_({ ok: true });
+}
+
+// ---- Admin approval page (admin.html) ----
+// The password is NOT in this file. Set it once: Project Settings > Script properties > key ADMIN_PASSWORD.
+// Every admin call must carry the password. Aadhaar, email and other private columns are never sent.
+function admin_(data) {
+  var cache = CacheService.getScriptCache();
+  if (Number(cache.get("adminFails") || 0) >= 5) return json_({ ok: false, error: "Too many wrong attempts. Try again after 15 minutes." });
+  var secret = PropertiesService.getScriptProperties().getProperty("ADMIN_PASSWORD");
+  var given = String(data.password || "");
+  if (!secret || given.length !== secret.length || !sameText_(given, secret)) {
+    Utilities.sleep(2000);
+    cache.put("adminFails", String(Number(cache.get("adminFails") || 0) + 1), 900);
+    return json_({ ok: false, error: secret ? "Wrong password." : "Admin password is not set yet." });
+  }
+  cache.remove("adminFails");
+  var action = String(data.action || "");
+  var sheet = getSheet_();
+  var rows = sheet.getDataRange().getValues();
+  var head = rows.shift();
+  var col = function (n) { return head.indexOf(n); };
+  if (action === "login") return json_({ ok: true });
+  if (action === "list") {
+    var want = String(data.status || "Pending").toLowerCase();
+    var out = [];
+    rows.forEach(function (r) {
+      var st = String(r[col("Status")]).trim().toLowerCase() || "pending";
+      if (st !== want) return;
+      out.push({
+        id: String(r[col("Skater ID")]).trim(), name: String(r[col("Name")]).trim(),
+        discipline: String(r[col("Discipline")]).trim(), group: String(r[col("Age group")]).trim(),
+        club: String(r[col("Club")]).trim(), dob: dateText_(r[col("Date of birth")]),
+        gender: String(r[col("Gender")]).trim(), parent: String(r[col("Parent or guardian")]).trim(),
+        mobile: String(r[col("Mobile")]).trim(), status: st, hasPhoto: !!String(r[col("Photo (Drive link)")]).trim()
+      });
+    });
+    return json_({ ok: true, skaters: out, groups: GROUPS });
+  }
+  var id = String(data.id || "").trim();
+  var idx = -1;
+  rows.forEach(function (r, i) { if (String(r[col("Skater ID")]).trim() === id) idx = i; });
+  if (idx < 0) return json_({ ok: false, error: "Skater not found." });
+  if (action === "photo") {
+    var m = /[-\w]{25,}/.exec(String(rows[idx][col("Photo (Drive link)")] || ""));
+    if (!m) return json_({ ok: true, photo: "" });
+    try {
+      var blob = DriveApp.getFileById(m[0]).getBlob();
+      return json_({ ok: true, photo: "data:" + blob.getContentType() + ";base64," + Utilities.base64Encode(blob.getBytes()) });
+    } catch (err) { return json_({ ok: true, photo: "" }); }
+  }
+  if (action === "update") {
+    var status = { approved: "Approved", rejected: "Rejected", pending: "Pending" }[String(data.status || "").toLowerCase()];
+    if (!status) return json_({ ok: false, error: "Bad status." });
+    var rowNo = idx + 2;
+    if (data.discipline !== undefined) {
+      var d = String(data.discipline);
+      sheet.getRange(rowNo, col("Discipline") + 1).setValue(d === "Inline" || d === "Quad" ? d : "");
+    }
+    if (data.group !== undefined) {
+      var g = String(data.group);
+      sheet.getRange(rowNo, col("Age group") + 1).setValue(GROUPS.indexOf(g) >= 0 ? g : "");
+    }
+    if (data.club !== undefined) sheet.getRange(rowNo, col("Club") + 1).setValue(clean_(data.club, 100));
+    sheet.getRange(rowNo, col("Status") + 1).setValue(status);
+    return json_({ ok: true, status: status });
+  }
+  return json_({ ok: false, error: "Unknown action." });
+}
+
+function sameText_(a, b) {
+  var diff = 0;
+  for (var i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
+function dateText_(v) {
+  if (v instanceof Date) return Utilities.formatDate(v, Session.getScriptTimeZone(), "yyyy-MM-dd");
+  return String(v || "").trim();
 }
 
 function json_(obj) {

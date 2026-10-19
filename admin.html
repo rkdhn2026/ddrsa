@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin · DDRSA</title>
+<link rel="icon" href="img/ddrsa-logo-32.png">
+<style>
+:root { --ink:#0f1a2b; --paper:#f5f7fa; --surface:#fff; --muted:#5a6577; --line:#d8dee8; --lane:#027e7e; --signal:#e02a2a; }
+* { box-sizing: border-box; }
+body { margin:0; font-family: "Segoe UI", system-ui, -apple-system, sans-serif; background:var(--paper); color:var(--ink); }
+.wrap { max-width: 900px; margin:0 auto; padding: 16px; }
+h1 { font-size:1.4rem; margin:0 0 4px; }
+.sub { color:var(--muted); margin:0 0 16px; font-size:.9rem; }
+.box, .card { background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px; }
+.card { margin-bottom:12px; display:grid; grid-template-columns: 96px 1fr; gap:14px; }
+.photo { width:96px; height:120px; background:#e8edf3; border-radius:6px; object-fit:cover; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:.75rem; text-align:center; }
+.name { font-weight:700; font-size:1.1rem; }
+.meta { color:var(--muted); font-size:.88rem; margin:2px 0 8px; line-height:1.5; }
+.edit { display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-bottom:10px; }
+label { font-size:.75rem; color:var(--muted); display:block; }
+input, select { width:100%; padding:8px; font-size:1rem; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); }
+button { font-size:1rem; font-weight:600; padding:9px 16px; border-radius:6px; border:2px solid var(--lane); background:var(--lane); color:#fff; cursor:pointer; }
+button.ghost { background:#fff; color:var(--lane); }
+button.bad { background:#fff; color:var(--signal); border-color:var(--signal); }
+button:disabled { opacity:.5; }
+.tabs { display:flex; gap:8px; margin:12px 0; flex-wrap:wrap; }
+.tabs button { background:#fff; color:var(--lane); }
+.tabs button.on { background:var(--lane); color:#fff; }
+.actions { display:flex; gap:8px; flex-wrap:wrap; }
+.msg { margin:10px 0; font-size:.95rem; }
+.err { color:var(--signal); }
+.top { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+@media (max-width:560px) { .card { grid-template-columns:1fr; } .photo { width:100%; height:200px; } .edit { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div><h1>DDRSA admin</h1><p class="sub">Approve skater registrations</p></div><button id="out" class="ghost" hidden>Log out</button></div>
+  <form id="login" class="box">
+    <label for="pw">Admin password</label>
+    <input id="pw" type="password" autocomplete="current-password" required>
+    <p class="msg err" id="lerr" hidden></p>
+    <button type="submit">Log in</button>
+  </form>
+  <div id="app" hidden>
+    <div class="tabs" id="tabs">
+      <button data-s="Pending" class="on">Pending</button>
+      <button data-s="Approved">Approved</button>
+      <button data-s="Rejected">Rejected</button>
+    </div>
+    <p class="msg" id="info"></p>
+    <div id="list"></div>
+  </div>
+</div>
+<script src="site-config.js"></script>
+<script>
+(function () {
+  var API = window.DDRSA_API, pw = "", status = "Pending", groups = [];
+  var GL = { "toddlers":"Toddlers (under 6)", "cadet-6-8":"Cadet 6-8", "cadet-10-12":"Cadet 10-12", "sub-junior":"Sub Junior", "junior":"Junior", "senior":"Senior" };
+  var $ = function (id) { return document.getElementById(id); };
+  function call(body) {
+    body.form = "admin"; body.password = pw;
+    return fetch(API, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json(); });
+  }
+  function el(tag, attrs, text) {
+    var e = document.createElement(tag);
+    for (var k in (attrs || {})) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  $("login").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    pw = $("pw").value; $("lerr").hidden = true;
+    var b = ev.target.querySelector("button"); b.disabled = true; b.textContent = "Checking...";
+    call({ action: "login" }).then(function (j) {
+      if (!j.ok) throw new Error(j.error);
+      $("login").hidden = true; $("app").hidden = false; $("out").hidden = false; load();
+    }).catch(function (e) {
+      pw = ""; $("lerr").textContent = e.message && e.message !== "Failed to fetch" ? e.message : "Could not connect. Try again.";
+      $("lerr").hidden = false;
+    }).then(function () { b.disabled = false; b.textContent = "Log in"; });
+  });
+  $("out").addEventListener("click", function () { pw = ""; location.reload(); });
+  $("tabs").addEventListener("click", function (ev) {
+    var s = ev.target.getAttribute("data-s"); if (!s) return;
+    status = s;
+    Array.prototype.forEach.call($("tabs").children, function (b) { b.className = b.getAttribute("data-s") === s ? "on" : ""; });
+    load();
+  });
+  function load() {
+    $("list").textContent = ""; $("info").className = "msg"; $("info").textContent = "Loading...";
+    call({ action: "list", status: status }).then(function (j) {
+      if (!j.ok) throw new Error(j.error);
+      groups = j.groups || [];
+      $("info").textContent = j.skaters.length ? j.skaters.length + " " + status.toLowerCase() : "Nobody here.";
+      j.skaters.forEach(function (s) { $("list").appendChild(card(s)); });
+    }).catch(function (e) { $("info").className = "msg err"; $("info").textContent = e.message || "Could not load."; });
+  }
+  function field(label, node) { var d = el("div"); d.appendChild(el("label", {}, label)); d.appendChild(node); return d; }
+  function card(s) {
+    var c = el("div", { "class": "card" });
+    var ph = el("div", { "class": "photo" }, s.hasPhoto ? "Loading photo..." : "No photo");
+    c.appendChild(ph);
+    if (s.hasPhoto) call({ action: "photo", id: s.id }).then(function (j) {
+      if (j.ok && j.photo) { var im = el("img", { "class": "photo", alt: "Photo of " + s.name, src: j.photo }); c.replaceChild(im, ph); }
+      else ph.textContent = "No photo";
+    }).catch(function () { ph.textContent = "Photo failed"; });
+    var body = el("div");
+    body.appendChild(el("div", { "class": "name" }, s.name + "  (" + s.id + ")"));
+    body.appendChild(el("div", { "class": "meta" }, "Born " + s.dob + " · " + s.gender + " · Parent: " + s.parent + " · Mobile: " + s.mobile));
+    var disc = el("select"); ["", "Inline", "Quad"].forEach(function (v) { var o = el("option", { value: v }, v || "Not set"); disc.appendChild(o); });
+    disc.value = s.discipline;
+    var grp = el("select"); grp.appendChild(el("option", { value: "" }, "Not set"));
+    groups.forEach(function (g) { grp.appendChild(el("option", { value: g }, GL[g] || g)); });
+    grp.value = s.group.toLowerCase();
+    var club = el("input", { type: "text", maxlength: "100" }); club.value = s.club;
+    var edit = el("div", { "class": "edit" });
+    edit.appendChild(field("Discipline", disc)); edit.appendChild(field("Age group", grp)); edit.appendChild(field("Club", club));
+    body.appendChild(edit);
+    var act = el("div", { "class": "actions" }), note = el("span", { "class": "msg" });
+    function set(newStatus, label, cls) {
+      var b = el("button", cls ? { "class": cls } : {}, label);
+      b.addEventListener("click", function () {
+        if (newStatus === "Rejected" && !confirm("Reject " + s.name + "?")) return;
+        Array.prototype.forEach.call(act.querySelectorAll("button"), function (x) { x.disabled = true; });
+        note.className = "msg"; note.textContent = "Saving...";
+        call({ action: "update", id: s.id, status: newStatus, discipline: disc.value, group: grp.value, club: club.value })
+          .then(function (j) { if (!j.ok) throw new Error(j.error); c.remove(); $("info").textContent = s.name + " is now " + newStatus + "."; })
+          .catch(function (e) {
+            note.className = "msg err"; note.textContent = e.message || "Not saved. Try again.";
+            Array.prototype.forEach.call(act.querySelectorAll("button"), function (x) { x.disabled = false; });
+          });
+      });
+      act.appendChild(b);
+    }
+    if (status !== "Approved") set("Approved", "Approve");
+    if (status === "Pending") set("Rejected", "Reject", "bad");
+    if (status === "Approved") set("Pending", "Remove from list", "bad");
+    if (status === "Rejected") set("Pending", "Move back to Pending", "ghost");
+    act.appendChild(note); body.appendChild(act); c.appendChild(body);
+    return c;
+  }
+})();
+</script>
+</body>
+</html>
