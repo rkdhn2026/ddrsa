@@ -94,6 +94,21 @@ function suggestGroup_(dob) {
   return "senior";
 }
 
+// Run once from the editor (choose fixAgeGroups, press Run): recalculates the Age group of every
+// existing row from its date of birth (age on 31 December of COMPETITION_YEAR).
+function fixAgeGroups() {
+  var sheet = getSheet_();
+  var rows = sheet.getDataRange().getValues();
+  var head = rows.shift();
+  var dobCol = head.indexOf("Date of birth"), grpCol = head.indexOf("Age group");
+  var changed = 0;
+  rows.forEach(function (r, i) {
+    var g = suggestGroup_(dateText_(r[dobCol]));
+    if (g && g !== String(r[grpCol]).trim()) { sheet.getRange(i + 2, grpCol + 1).setValue(g); changed++; }
+  });
+  Logger.log("Age groups corrected: " + changed);
+}
+
 // Public links must be web addresses. An Instagram handle like @name becomes a link.
 function link_(value, site) {
   var s = String(value || "").trim();
