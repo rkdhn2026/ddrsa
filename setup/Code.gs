@@ -23,7 +23,7 @@ var HEADERS = ["Skater ID", "Timestamp", "Status", "Name", "Discipline", "Age gr
 var COMPETITION_YEAR = 2026;
 var PHOTO_FOLDER_NAME = "DDRSA skater photos";   // separate from anything else; created on first use
 var MAX_PHOTO_BYTES = 1024 * 1024;
-var GROUPS = ["toddlers", "cadet-6-8", "cadet-10-12", "sub-junior", "junior", "senior"];
+var GROUPS = ["toddlers", "cadet-6-8", "cadet-8-10", "cadet-10-12", "sub-junior", "junior", "senior"];
 
 function getSheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -86,7 +86,8 @@ function suggestGroup_(dob) {
   var age = ref.getFullYear() - d.getFullYear();
   if (ref.getMonth() < d.getMonth() || (ref.getMonth() === d.getMonth() && ref.getDate() < d.getDate())) age--;
   if (age < 6) return "toddlers";
-  if (age < 10) return "cadet-6-8";
+  if (age < 8) return "cadet-6-8";
+  if (age < 10) return "cadet-8-10";
   if (age < 12) return "cadet-10-12";
   if (age < 15) return "sub-junior";
   if (age < 18) return "junior";

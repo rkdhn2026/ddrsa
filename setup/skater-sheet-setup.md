@@ -26,7 +26,7 @@ Send the Web app URL to us. We paste it into `site-config.js` on the website and
 ## Approving skaters
 - New registrations appear in the "Registrations" tab with **Status = Pending**.
 - Check the row (birth certificate, club verification). Check **Discipline** (Inline or Quad) and **Age group**, and fix them if needed.
-- The age group is only a suggestion worked out from the age on 31 December of the competition year (set `COMPETITION_YEAR` at the top of the script, currently 2026). Valid values: `toddlers`, `cadet-6-8`, `cadet-10-12`, `sub-junior`, `junior`, `senior`.
+- The age group is only a suggestion worked out from the age on 31 December of the competition year (set `COMPETITION_YEAR` at the top of the script, currently 2026). Valid values: `toddlers`, `cadet-6-8`, `cadet-8-10`, `cadet-10-12`, `sub-junior`, `junior`, `senior`.
 - Change **Status** to `Approved`. The skater shows on the Skaters list on the next page load.
 - Columns **Instagram**, **Facebook**, **Photo (Drive link)** and **Titles and achievements** are optional and only used when **Show on public profile** says Yes.
 - The **Aadhaar number** column is private. Only share the sheet with people you trust, and never with "anyone with the link". The number is saved as text so Sheets does not change it.

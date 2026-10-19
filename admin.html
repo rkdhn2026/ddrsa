@@ -58,7 +58,7 @@ button:disabled { opacity:.5; }
 <script>
 (function () {
   var API = window.DDRSA_API, pw = "", status = "Pending", groups = [];
-  var GL = { "toddlers":"Toddlers (under 6)", "cadet-6-8":"Cadet 6-8", "cadet-10-12":"Cadet 10-12", "sub-junior":"Sub Junior", "junior":"Junior", "senior":"Senior" };
+  var GL = { "toddlers":"Toddlers (under 6)", "cadet-6-8":"Cadet 6-8", "cadet-8-10":"Cadet 8-10", "cadet-10-12":"Cadet 10-12", "sub-junior":"Sub Junior", "junior":"Junior", "senior":"Senior" };
   var $ = function (id) { return document.getElementById(id); };
   function call(body) {
     body.form = "admin"; body.password = pw;
